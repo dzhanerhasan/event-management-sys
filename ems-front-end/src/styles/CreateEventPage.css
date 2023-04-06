@@ -1,0 +1,60 @@
+.create-event-form .has-validation .form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.create-event-title {
+  opacity: 0;
+  animation-name: fadeUp;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.1s;
+}
+
+.create-event-form .invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+.create-event-form .form-label,
+.create-event-form .form-control,
+.create-event-form button {
+  opacity: 0;
+  animation-name: fadeUp;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+.create-event-form .form-label {
+  animation-delay: 0.25s;
+}
+
+.create-event-form .form-control {
+  animation-delay: 0.5s;
+}
+
+.create-event-form button {
+  animation-delay: 0.75s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

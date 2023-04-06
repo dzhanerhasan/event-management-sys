@@ -1,0 +1,11 @@
+.footer {
+  background-color: #f8f9fa;
+  width: 100%;
+  text-align: center;
+}
+
+.footer .text-muted {
+  font-size: 14px;
+  word-wrap: break-word;
+  padding: 0 10px;
+}
