@@ -5,46 +5,83 @@ export const EventContext = createContext();
 export const EventProvider = ({ children }) => {
   const [events, setEvents] = useState([
     {
+      id: 1,
+      title: "Birthday Party",
+      location: "New York City",
+      date: "2023-04-20",
+      time: "18:00",
+      description: "Join us for a fantastic birthday celebration!",
+      attendees: ["John", "Jane", "Michael", "Olivia"],
+    },
+    {
+      id: 2,
+      title: "Conference",
+      location: "Los Angeles",
+      date: "2023-04-25",
+      time: "09:00",
+      description: "An annual conference on the latest trends in technology.",
+      attendees: ["Steve", "Sophia", "Jack", "Emma"],
+    },
+    {
+      id: 3,
       title: "Art Exhibition",
-      date: "2023-05-12",
-      location: "Art Gallery, New York",
-      description:
-        "Join us for an exclusive art exhibition featuring contemporary artists from around the world.",
+      location: "San Francisco",
+      date: "2023-05-01",
+      time: "14:00",
+      description: "An exhibition showcasing the most talented local artists.",
+      attendees: ["Emily", "David", "Lucy", "Liam"],
     },
     {
-      title: "Charity Marathon",
-      date: "2023-06-20",
-      location: "Central Park, New York",
+      id: 4,
+      title: "Networking Event",
+      location: "Chicago",
+      date: "2023-05-10",
+      time: "19:00",
       description:
-        "Participate in our annual charity marathon and help raise funds for local nonprofits.",
+        "A great opportunity to meet new people and expand your network.",
+      attendees: ["Ava", "James", "Isabella", "Benjamin"],
     },
     {
-      title: "Food Festival",
-      date: "2023-07-15",
-      location: "Waterfront Park, San Francisco",
+      id: 5,
+      title: "Live Concert",
+      location: "Miami",
+      date: "2023-05-15",
+      time: "20:00",
       description:
-        "Taste a variety of delicious dishes from local vendors at our annual food festival.",
+        "A live concert featuring some of the biggest names in music.",
+      attendees: ["Mia", "Alexander", "Ella", "Sebastian"],
     },
     {
-      title: "Startup Conference",
-      date: "2023-08-23",
-      location: "Tech Center, San Francisco",
+      id: 6,
+      title: "Workshop",
+      location: "Boston",
+      date: "2023-05-20",
+      time: "10:00",
       description:
-        "Join entrepreneurs, investors, and startups at our annual conference to discuss the latest trends and opportunities in the tech industry.",
+        "A hands-on workshop to learn new skills and improve your career.",
+      attendees: ["Zoe", "Daniel", "Leah", "Matthew"],
     },
+
     {
-      title: "Jazz Concert",
-      date: "2023-09-12",
-      location: "Concert Hall, Chicago",
+      id: 7,
+      title: "Workshop",
+      location: "Boston",
+      date: "2023-05-20",
+      time: "10:00",
       description:
-        "Don't miss an unforgettable evening of jazz music performed by world-class musicians.",
+        "A hands-on workshop to learn new skills and improve your career.",
+      attendees: ["Zoe", "Daniel", "Leah", "Matthew"],
     },
+
     {
-      title: "Literary Festival",
-      date: "2023-10-05",
-      location: "City Library, Chicago",
+      id: 8,
+      title: "Workshop",
+      location: "Boston",
+      date: "2023-05-20",
+      time: "10:00",
       description:
-        "Celebrate literature and engage in thought-provoking discussions with renowned authors at our annual literary festival.",
+        "A hands-on workshop to learn new skills and improve your career.",
+      attendees: ["Zoe", "Daniel", "Leah", "Matthew"],
     },
   ]);
 

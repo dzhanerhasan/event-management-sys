@@ -1,45 +1,57 @@
-.all-events-container {
-  margin-top: 2rem;
+.arrow-btn {
+  position: relative;
+  overflow: hidden;
 }
 
-.all-events-title {
-  margin-bottom: 1.5rem;
-  opacity: 0;
-  animation-name: fadeUp;
-  animation-duration: 1s;
-  animation-fill-mode: forwards;
-  animation-delay: 0.1s;
+.arrow-btn:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
 }
 
-.event-card {
-  opacity: 0;
-  animation-name: fadeUp;
-  animation-duration: 1s;
-  animation-fill-mode: forwards;
+.arrow-btn:hover:before {
+  transform: scaleX(1);
 }
 
-.event-card:nth-child(1) {
-  animation-delay: 0.25s;
+.row.slide-1 {
+  animation: slideInFromLeft 0.5s;
 }
 
-.event-card:nth-child(2) {
-  animation-delay: 0.5s;
+.row.slide-2,
+.row.slide-4,
+.row.slide-6,
+.row.slide-8 {
+  animation: slideInFromRight 0.5s;
 }
 
-.event-card:nth-child(3) {
-  animation-delay: 0.75s;
+.row.slide-3,
+.row.slide-5,
+.row.slide-7,
+.row.slide-9 {
+  animation: slideInFromLeft 0.5s;
 }
 
-.event-card:nth-child(4) {
-  animation-delay: 1s;
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
-.event-card:nth-child(5) {
-  animation-delay: 1.25s;
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
-
-.event-card:nth-child(6) {
-  animation-delay: 1.5s;
-}
-
-/* Add more delay values for more events if needed */

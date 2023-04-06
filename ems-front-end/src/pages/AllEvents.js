@@ -1,18 +1,72 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import EventCard from "../components/EventCard";
 import { EventContext } from "../contexts/EventContext";
+import moment from "moment";
 import "../styles/AllEvents.css";
 
 const AllEvents = () => {
   const { events } = useContext(EventContext);
 
+  const sortedEvents = events
+    .filter((event) => moment(event.date + " " + event.time).isSameOrAfter())
+    .sort((a, b) =>
+      moment(a.date + " " + a.time).isBefore(b.date + " " + b.time) ? 1 : -1
+    );
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  const indexOfLastEvent = currentPage * itemsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - itemsPerPage;
+  const currentEvents = sortedEvents.slice(indexOfFirstEvent, indexOfLastEvent);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) =>
+      prevPage < Math.ceil(sortedEvents.length / itemsPerPage)
+        ? prevPage + 1
+        : prevPage
+    );
+  };
+
   return (
     <div className="container-md my-5">
-      <h1 className="text-center mb-4">All Events</h1>
-      <div className="row">
-        {events.map((event, index) => (
-          <EventCard key={index} event={event} index={index} />
+      <h2 className="text-center mb-4">All Events</h2>
+      <div className={`row slide-${currentPage}`}>
+        {currentEvents.map((event, index) => (
+          <EventCard
+            key={index}
+            event={event}
+            index={index}
+            delay={(indexOfFirstEvent + index) * 0.1}
+          />
         ))}
+      </div>
+
+      <div className="d-flex justify-content-center my-5">
+        <button
+          className="btn btn-primary mx-2 arrow-btn"
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+        >
+          &larr; Previous
+        </button>
+        <button
+          className="btn btn-primary mx-2 arrow-btn"
+          onClick={handleNextPage}
+          disabled={
+            currentPage === Math.ceil(sortedEvents.length / itemsPerPage)
+          }
+        >
+          Next &rarr;
+        </button>
       </div>
     </div>
   );
