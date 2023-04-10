@@ -17,3 +17,17 @@
     transform: translateY(0);
   }
 }
+
+.event-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.event-card .card-text {
+  display: flex;
+  align-items: center;
+}
+
+.event-card .card-text .fa-users {
+  margin-left: 5px;
+}

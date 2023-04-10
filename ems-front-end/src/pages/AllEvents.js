@@ -1,8 +1,11 @@
+import "../styles/AllEvents.css";
+
 import React, { useContext, useState, useEffect } from "react";
-import EventCard from "../components/EventCard";
 import { EventContext } from "../contexts/EventContext";
 import moment from "moment";
-import "../styles/AllEvents.css";
+
+import NavigationButton from "../components/NavigationButton";
+import EventCard from "../components/EventCard";
 
 const AllEvents = () => {
   const { events } = useContext(EventContext);
@@ -37,36 +40,34 @@ const AllEvents = () => {
   };
 
   return (
-    <div className="container-md my-5">
-      <h2 className="text-center mb-4">All Events</h2>
-      <div className={`row slide-${currentPage}`}>
-        {currentEvents.map((event, index) => (
-          <EventCard
-            key={index}
-            event={event}
-            index={index}
-            delay={(indexOfFirstEvent + index) * 0.1}
-          />
-        ))}
+    <div className="container-md my-5 all-event-container">
+      <div>
+        <h2 className="text-center mb-4">All Events</h2>
+        <div className={`row slide-${currentPage}`}>
+          {currentEvents.map((event, index) => (
+            <EventCard
+              key={index}
+              event={event}
+              index={index}
+              delay={(indexOfFirstEvent + index) * 0.1}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="d-flex justify-content-center my-5">
-        <button
-          className="btn btn-primary mx-2 arrow-btn"
+      <div className="d-flex justify-content-center ">
+        <NavigationButton
+          direction="prev"
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-        >
-          &larr; Previous
-        </button>
-        <button
-          className="btn btn-primary mx-2 arrow-btn"
+        />
+        <NavigationButton
+          direction="next"
           onClick={handleNextPage}
           disabled={
             currentPage === Math.ceil(sortedEvents.length / itemsPerPage)
           }
-        >
-          Next &rarr;
-        </button>
+        />
       </div>
     </div>
   );
