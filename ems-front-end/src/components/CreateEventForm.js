@@ -6,6 +6,7 @@ const CreateEventForm = ({ onSubmit }) => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [successMessage, setSuccessMessage] = useState(false);
   const [validation, setValidation] = useState({});
 
@@ -15,11 +16,20 @@ const CreateEventForm = ({ onSubmit }) => {
     const isDateValid = date >= currentDate;
 
     if (title && description && date && location) {
-      onSubmit({ title, description, date, location });
+      const defaultImageUrl =
+        "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80";
+      onSubmit({
+        title,
+        description,
+        date,
+        location,
+        imageUrl: imageUrl || defaultImageUrl,
+      });
       setTitle("");
       setDescription("");
       setDate("");
       setLocation("");
+      setImageUrl("");
       setSuccessMessage(true);
       setTimeout(() => setSuccessMessage(false), 3000);
     } else {
@@ -121,6 +131,20 @@ const CreateEventForm = ({ onSubmit }) => {
             <div className="invalid-feedback">Please enter a location.</div>
           )}
         </div>
+
+        <div className="mb-3">
+          <label htmlFor="imageUrl" className="form-label">
+            Image URL
+          </label>
+          <input
+            type="url"
+            className="form-control"
+            id="imageUrl"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+          />
+        </div>
+
         <button
           type="submit"
           className="btn"

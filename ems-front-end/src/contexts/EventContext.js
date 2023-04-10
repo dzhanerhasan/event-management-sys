@@ -6,6 +6,12 @@ export const EventContext = createContext();
 export const EventProvider = ({ children }) => {
   const [events, setEvents] = useState(dummy);
 
+  const addEvent = (eventData) => {
+    const newId = Math.max(...events.map((event) => event.id)) + 1;
+    const newEvent = { ...eventData, id: newId, attendees: [] };
+    setEvents((prevEvents) => [...prevEvents, newEvent]);
+  };
+
   const participateInEvent = (eventId, userName) => {
     setEvents((prevEvents) =>
       prevEvents.map((event) =>
@@ -33,7 +39,12 @@ export const EventProvider = ({ children }) => {
 
   return (
     <EventContext.Provider
-      value={{ events, participateInEvent, cancelParticipation }}
+      value={{
+        events,
+        addEvent,
+        participateInEvent,
+        cancelParticipation,
+      }}
     >
       {children}
     </EventContext.Provider>
