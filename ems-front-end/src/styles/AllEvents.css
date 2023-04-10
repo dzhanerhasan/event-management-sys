@@ -27,24 +27,6 @@
   transform: scaleX(1);
 }
 
-.row.slide-1 {
-  animation: slideInFromLeft 0.5s;
-}
-
-.row.slide-2,
-.row.slide-4,
-.row.slide-6,
-.row.slide-8 {
-  animation: slideInFromRight 0.5s;
-}
-
-.row.slide-3,
-.row.slide-5,
-.row.slide-7,
-.row.slide-9 {
-  animation: slideInFromLeft 0.5s;
-}
-
 @keyframes slideInFromLeft {
   0% {
     transform: translateX(-100%);

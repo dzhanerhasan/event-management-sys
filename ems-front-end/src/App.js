@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import AllEvents from "./pages/AllEvents";
 import CreateEvent from "./pages/CreateEvent";
 import MyEvents from "./pages/MyEvents";
+import EventDetails from "./pages/EventDetails";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       { path: "/all-events", element: <AllEvents /> },
       { path: "/create-event", element: <CreateEvent /> },
       { path: "/my-events", element: <MyEvents /> },
+      { path: "/event/:eventId", element: <EventDetails /> },
     ],
   },
 ]);

@@ -6,6 +6,7 @@ import moment from "moment";
 
 import NavigationButton from "../components/NavigationButton";
 import EventCard from "../components/EventCard";
+import useAnimation from "../hooks/useAnimation";
 
 const AllEvents = () => {
   const { events } = useContext(EventContext);
@@ -39,11 +40,16 @@ const AllEvents = () => {
     );
   };
 
+  const rowRef = useAnimation(
+    currentPage % 2 === 0 ? "slideInFromRight" : "slideInFromLeft",
+    currentPage
+  );
+
   return (
     <div className="container-md my-5 all-event-container">
       <div>
         <h2 className="text-center mb-4">All Events</h2>
-        <div className={`row slide-${currentPage}`}>
+        <div className={`row slide-${currentPage}`} ref={rowRef}>
           {currentEvents.map((event, index) => (
             <EventCard
               key={index}
