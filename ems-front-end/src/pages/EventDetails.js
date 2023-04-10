@@ -7,7 +7,8 @@ import "../styles/EventDetails.css";
 
 const EventDetails = () => {
   const { eventId } = useParams();
-  const { events } = useContext(EventContext);
+  const { events, participateInEvent, cancelParticipation } =
+    useContext(EventContext);
   const [event, setEvent] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isParticipating, setIsParticipating] = useState(false);
@@ -16,6 +17,9 @@ const EventDetails = () => {
     const numEventId = Number(eventId);
     const foundEvent = events.find((e) => e.id === numEventId);
     setEvent(foundEvent);
+    if (foundEvent) {
+      setIsParticipating(foundEvent.attendees.includes("You"));
+    }
   }, [eventId, events]);
 
   const toggleParticipantsModal = () => {
@@ -24,18 +28,12 @@ const EventDetails = () => {
 
   const handleParticipate = () => {
     setIsParticipating(true);
-    setEvent((prevEvent) => ({
-      ...prevEvent,
-      attendees: [...prevEvent.attendees, "You"],
-    }));
+    participateInEvent(event.id, "You");
   };
 
   const handleCancel = () => {
     setIsParticipating(false);
-    setEvent((prevEvent) => ({
-      ...prevEvent,
-      attendees: prevEvent.attendees.filter((attendee) => attendee !== "You"),
-    }));
+    cancelParticipation(event.id, "You");
   };
 
   if (!event) {
@@ -47,10 +45,14 @@ const EventDetails = () => {
   return (
     <div className="container-md my-5 event-details">
       <div className="row">
-        <div className="col-md-6">
-          <img className="event-details-img" src={imageUrl} alt={title} />
+        <div className="col-md-6 col-lg-6">
+          <img
+            className="event-details-img img-fluid"
+            src={imageUrl}
+            alt={title}
+          />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-6 col-lg-6">
           <h2 className="event-details-title">{title}</h2>
           <p className="event-details-date-time">
             {date} - {time}
@@ -71,9 +73,11 @@ const EventDetails = () => {
         </div>
       </div>
       <ParticipantModal
-        visible={modalVisible}
-        onClose={toggleParticipantsModal}
+        showModal={modalVisible}
+        toggleModal={toggleParticipantsModal}
         participants={attendees}
+        participating={isParticipating}
+        toggleParticipation={isParticipating ? handleCancel : handleParticipate}
       />
     </div>
   );

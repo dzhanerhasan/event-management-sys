@@ -1,13 +1,8 @@
 import React from "react";
 import "../styles/ParticipantModal.css";
+import { FaTimes } from "react-icons/fa";
 
-const ParticipantModal = ({
-  showModal,
-  toggleModal,
-  participants,
-  participating,
-  toggleParticipation,
-}) => {
+const ParticipantModal = ({ showModal, toggleModal, participants }) => {
   if (!showModal) {
     return null;
   }
@@ -19,17 +14,12 @@ const ParticipantModal = ({
         onClick={(e) => e.stopPropagation()}
       >
         <h3>Participants</h3>
+        <FaTimes className="participant-modal-close" onClick={toggleModal} />
         <ul>
           {participants.map((participant, index) => (
             <li key={index}>{participant}</li>
           ))}
         </ul>
-        <button className="btn btn-primary" onClick={toggleParticipation}>
-          {participating ? "Cancel" : "Participate"}
-        </button>
-        <button className="btn btn-secondary" onClick={toggleModal}>
-          Close
-        </button>
       </div>
     </div>
   );

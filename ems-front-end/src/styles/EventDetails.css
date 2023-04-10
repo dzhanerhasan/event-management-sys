@@ -1,42 +1,49 @@
 .event-details {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .event-details-img {
   width: 100%;
   height: auto;
-  border-radius: 10px;
+  margin-bottom: 1rem;
 }
 
 .event-details-title {
-  margin-top: 1rem;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
 .event-details-date-time {
-  font-size: 1rem;
-  font-weight: bold;
-  color: #777;
+  font-size: 1.2rem;
+  color: #6c757d;
   margin-bottom: 1rem;
 }
 
 .event-details-description {
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 1.1rem;
 }
 
-.event-details-participants {
+.event-details-participant-count {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  align-items: center;
-  font-weight: bold;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.event-details-participant-count:hover {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+}
+
+@media (max-width: 767px) {
+  .event-details {
+    display: flex;
+    flex-direction: column;
+  }
 }
