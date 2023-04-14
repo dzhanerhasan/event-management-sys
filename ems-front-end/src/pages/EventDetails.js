@@ -1,9 +1,13 @@
+import "../styles/EventDetails.css";
+
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { EventContext } from "../contexts/EventContext";
-import ParticipantModal from "../components/ParticipantModal";
 import { FaUsers } from "react-icons/fa";
-import "../styles/EventDetails.css";
+
+import moment from "moment";
+
+import ParticipantModal from "../components/ParticipantModal";
 
 const EventDetails = () => {
   const { eventId } = useParams();
@@ -55,7 +59,8 @@ const EventDetails = () => {
         <div className="col-md-6 col-lg-6">
           <h2 className="event-details-title">{title}</h2>
           <p className="event-details-date-time">
-            {date} - {time}
+            {moment(date).format("MMMM Do, YYYY")} -{" "}
+            {moment(time, "HH:mm").format("hh:mm A")}
           </p>
           <p className="event-details-description">{description}</p>
           <button

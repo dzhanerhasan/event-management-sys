@@ -45,15 +45,17 @@ const AllEvents = () => {
     <div className="container-md my-5 all-event-container">
       <div>
         <h2 className="text-center mb-4">All Events</h2>
-        <div className={`row slide-${currentPage}`} ref={rowRef}>
-          {currentEvents.map((event, index) => (
-            <EventCard
-              key={index}
-              event={event}
-              index={index}
-              delay={(indexOfFirstEvent + index) * 0.1}
-            />
-          ))}
+        <div className="events-wrapper">
+          <div className={`row slide-${currentPage}`} ref={rowRef}>
+            {currentEvents.map((event, index) => (
+              <EventCard
+                key={index}
+                event={event}
+                index={index}
+                delay={(indexOfFirstEvent + index) * 0.1}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
