@@ -1,6 +1,6 @@
 import "../styles/AllEvents.css";
 
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { EventContext } from "../contexts/EventContext";
 import moment from "moment";
 
@@ -23,10 +23,6 @@ const AllEvents = () => {
   const indexOfLastEvent = currentPage * itemsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - itemsPerPage;
   const currentEvents = sortedEvents.slice(indexOfFirstEvent, indexOfLastEvent);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [currentPage]);
 
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));

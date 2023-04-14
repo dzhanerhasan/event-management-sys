@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import "../styles/CreateEventPage.css";
 
+import EventInputField from "../components/EventInputField";
+
 const CreateEventForm = ({ onSubmit }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [successMessage, setSuccessMessage] = useState(false);
@@ -15,19 +18,21 @@ const CreateEventForm = ({ onSubmit }) => {
     const currentDate = new Date().toISOString().split("T")[0];
     const isDateValid = date >= currentDate;
 
-    if (title && description && date && location) {
+    if (title && description && date && time && location) {
       const defaultImageUrl =
         "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80";
       onSubmit({
         title,
         description,
         date,
+        time,
         location,
         imageUrl: imageUrl || defaultImageUrl,
       });
       setTitle("");
       setDescription("");
       setDate("");
+      setTime("");
       setLocation("");
       setImageUrl("");
       setSuccessMessage(true);
@@ -37,6 +42,7 @@ const CreateEventForm = ({ onSubmit }) => {
         title: !title,
         description: !description,
         date: !date || !isDateValid,
+        time: !time,
         location: !location,
       });
     }
@@ -50,100 +56,78 @@ const CreateEventForm = ({ onSubmit }) => {
         </div>
       )}
       <form onSubmit={handleSubmit} className="create-event-form">
-        <div className={`mb-3 ${validation.title ? "has-validation" : ""}`}>
-          <label htmlFor="title" className="form-label">
-            Title
-          </label>
-          <input
-            type="text"
-            className={`form-control ${validation.title ? "is-invalid" : ""}`}
-            id="title"
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              setValidation({ ...validation, title: false });
-            }}
-          />
-          {validation.title && (
-            <div className="invalid-feedback">Please enter a title.</div>
-          )}
-        </div>
+        <EventInputField
+          type="text"
+          id="title"
+          label="Title"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            setValidation({ ...validation, title: false });
+          }}
+          invalidFeedback="Please enter a title."
+          validation={validation.title}
+        />
 
-        <div
-          className={`mb-3 ${validation.description ? "has-validation" : ""}`}
-        >
-          <label htmlFor="description" className="form-label">
-            Description
-          </label>
-          <textarea
-            className={`form-control ${
-              validation.description ? "is-invalid" : ""
-            }`}
-            id="description"
-            rows="3"
-            value={description}
-            onChange={(e) => {
-              setDescription(e.target.value);
-              setValidation({ ...validation, description: false });
-            }}
-          ></textarea>
-          {validation.description && (
-            <div className="invalid-feedback">Please enter a description.</div>
-          )}
-        </div>
+        <EventInputField
+          type="textarea"
+          id="description"
+          label="Description"
+          value={description}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            setValidation({ ...validation, description: false });
+          }}
+          invalidFeedback="Please enter a description."
+          validation={validation.description}
+        />
 
-        <div className={`mb-3 ${validation.date ? "has-validation" : ""}`}>
-          <label htmlFor="date" className="form-label">
-            Date
-          </label>
-          <input
-            type="date"
-            className={`form-control ${validation.date ? "is-invalid" : ""}`}
-            id="date"
-            value={date}
-            onChange={(e) => {
-              setDate(e.target.value);
-              setValidation({ ...validation, date: false });
-            }}
-          />
-          {validation.date && (
-            <div className="invalid-feedback">Please enter a valid date.</div>
-          )}
-        </div>
+        <EventInputField
+          type="date"
+          id="date"
+          label="Date"
+          value={date}
+          onChange={(e) => {
+            setDate(e.target.value);
+            setValidation({ ...validation, date: false });
+          }}
+          invalidFeedback="Please enter a valid date."
+          validation={validation.date}
+        />
 
-        <div className={`mb-3 ${validation.location ? "has-validation" : ""}`}>
-          <label htmlFor="location" className="form-label">
-            Location
-          </label>
-          <input
-            type="text"
-            className={`form-control ${
-              validation.location ? "is-invalid" : ""
-            }`}
-            id="location"
-            value={location}
-            onChange={(e) => {
-              setLocation(e.target.value);
-              setValidation({ ...validation, location: false });
-            }}
-          />
-          {validation.date && (
-            <div className="invalid-feedback">Please enter a location.</div>
-          )}
-        </div>
+        <EventInputField
+          type="time"
+          id="time"
+          label="Time"
+          value={time}
+          onChange={(e) => {
+            setTime(e.target.value);
+            setValidation({ ...validation, time: false });
+          }}
+          invalidFeedback="Please enter a time."
+          validation={validation.time}
+        />
 
-        <div className="mb-3">
-          <label htmlFor="imageUrl" className="form-label">
-            Image URL
-          </label>
-          <input
-            type="url"
-            className="form-control"
-            id="imageUrl"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-          />
-        </div>
+        <EventInputField
+          type="text"
+          id="location"
+          label="Location"
+          value={location}
+          onChange={(e) => {
+            setLocation(e.target.value);
+            setValidation({ ...validation, location: false });
+          }}
+          invalidFeedback="Please enter a location."
+          validation={validation.location}
+        />
+
+        <EventInputField
+          type="url"
+          id="imageUrl"
+          label="Image URL"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+        />
 
         <button
           type="submit"

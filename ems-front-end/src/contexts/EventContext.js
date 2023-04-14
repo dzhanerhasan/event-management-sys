@@ -1,10 +1,14 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import dummy from "./dummyData";
 
 export const EventContext = createContext();
 
 export const EventProvider = ({ children }) => {
   const [events, setEvents] = useState(dummy);
+
+  useEffect(() => {
+    console.log("events updated:", events);
+  }, [events]);
 
   const addEvent = (eventData) => {
     const newId = Math.max(...events.map((event) => event.id)) + 1;
