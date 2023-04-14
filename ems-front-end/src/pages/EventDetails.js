@@ -1,9 +1,10 @@
 import "../styles/EventDetails.css";
 
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { EventContext } from "../contexts/EventContext";
 import { FaUsers } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 
 import moment from "moment";
 
@@ -16,6 +17,7 @@ const EventDetails = () => {
   const [event, setEvent] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isParticipating, setIsParticipating] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const numEventId = Number(eventId);
@@ -40,6 +42,10 @@ const EventDetails = () => {
     cancelParticipation(event.id, "You");
   };
 
+  const navigateBack = () => {
+    navigate(-1);
+  };
+
   if (!event) {
     return <p>Event not found.</p>;
   }
@@ -47,43 +53,46 @@ const EventDetails = () => {
   const { title, date, time, description, imageUrl, attendees } = event;
 
   return (
-    <div className="container-md my-5 event-details">
-      <div className="row">
-        <div className="col-md-6 col-lg-6">
-          <img
-            className="event-details-img img-fluid"
-            src={imageUrl}
-            alt={title}
-          />
-        </div>
-        <div className="col-md-6 col-lg-6">
-          <h2 className="event-details-title">{title}</h2>
-          <p className="event-details-date-time">
-            {moment(date).format("MMMM Do, YYYY")} -{" "}
-            {moment(time, "HH:mm").format("hh:mm A")}
-          </p>
-          <p className="event-details-description">{description}</p>
-          <button
-            className={`btn btn-${isParticipating ? "danger" : "primary"} mt-3`}
-            onClick={isParticipating ? handleCancel : handleParticipate}
-          >
-            {isParticipating ? "Cancel" : "Participate"}
-          </button>
-          <div
-            className="event-details-participant-count float-end"
-            onClick={toggleParticipantsModal}
-          >
-            {attendees.length} <FaUsers />
+    <div className="event-details">
+      <div className="event-details-wrapper">
+        <FaArrowLeft className="back-arrow" onClick={navigateBack} />
+        <div className="event-details-container container d-flex justify-content-center align-items-center vh-100">
+          <div className="event-details-card card">
+            <img className="card-img-top" src={imageUrl} alt={title} />
+            <div className="card-body text-center">
+              <h2 className="card-title">{title}</h2>
+              <p className="text-muted">
+                {moment(date).format("MMMM Do, YYYY")} -{" "}
+                {moment(time, "HH:mm").format("hh:mm A")}
+              </p>
+              <p className="card-text">{description}</p>
+              <button
+                className={`btn ${
+                  isParticipating ? "btn-danger" : "btn-primary"
+                } mt-3`}
+                onClick={isParticipating ? handleCancel : handleParticipate}
+              >
+                {isParticipating ? "Cancel" : "Participate"}
+              </button>
+            </div>
           </div>
         </div>
+        <div
+          className="event-details-participant-count"
+          onClick={toggleParticipantsModal}
+        >
+          {attendees.length} <FaUsers />
+        </div>
+        <ParticipantModal
+          showModal={modalVisible}
+          toggleModal={toggleParticipantsModal}
+          participants={attendees}
+          participating={isParticipating}
+          toggleParticipation={
+            isParticipating ? handleCancel : handleParticipate
+          }
+        />
       </div>
-      <ParticipantModal
-        showModal={modalVisible}
-        toggleModal={toggleParticipantsModal}
-        participants={attendees}
-        participating={isParticipating}
-        toggleParticipation={isParticipating ? handleCancel : handleParticipate}
-      />
     </div>
   );
 };
