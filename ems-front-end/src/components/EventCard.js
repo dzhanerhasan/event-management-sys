@@ -1,7 +1,9 @@
+import "../styles/EventCard.css";
+
 import React from "react";
 import { Link } from "react-router-dom";
-import "../styles/EventCard.css";
 import { FaUsers } from "react-icons/fa";
+
 import moment from "moment";
 
 const EventCard = ({ event, delay }) => {

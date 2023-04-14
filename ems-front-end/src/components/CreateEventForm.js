@@ -1,5 +1,6 @@
-import React, { useState } from "react";
 import "../styles/CreateEventPage.css";
+
+import React, { useState } from "react";
 
 import EventInputField from "../components/EventInputField";
 
@@ -18,7 +19,7 @@ const CreateEventForm = ({ onSubmit }) => {
     const currentDate = new Date().toISOString().split("T")[0];
     const isDateValid = date >= currentDate;
 
-    if (title && description && date && time && location) {
+    if (title && description && date && time && location && isDateValid) {
       const defaultImageUrl =
         "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80";
       onSubmit({
@@ -51,10 +52,16 @@ const CreateEventForm = ({ onSubmit }) => {
   return (
     <div>
       {successMessage && (
-        <div className="alert alert-success" role="alert">
+        <div
+          className={`alert alert-success fade show`}
+          role="alert"
+          onAnimationEnd={() => setSuccessMessage(false)}
+          style={{ animation: "fade-in-out 3s" }}
+        >
           Event created successfully!
         </div>
       )}
+
       <form onSubmit={handleSubmit} className="create-event-form">
         <EventInputField
           type="text"

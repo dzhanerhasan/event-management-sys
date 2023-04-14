@@ -6,10 +6,6 @@ export const EventContext = createContext();
 export const EventProvider = ({ children }) => {
   const [events, setEvents] = useState(dummy);
 
-  useEffect(() => {
-    console.log("events updated:", events);
-  }, [events]);
-
   const addEvent = (eventData) => {
     const newId = Math.max(...events.map((event) => event.id)) + 1;
     const newEvent = { ...eventData, id: newId, attendees: [] };

@@ -58,3 +58,14 @@
     transform: translateY(0);
   }
 }
+
+@keyframes fade-in-out {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+}

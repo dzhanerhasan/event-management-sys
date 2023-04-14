@@ -1,5 +1,6 @@
-import React from "react";
 import "../styles/ParticipantModal.css";
+
+import React from "react";
 import { FaTimes } from "react-icons/fa";
 
 const ParticipantModal = ({ showModal, toggleModal, participants }) => {

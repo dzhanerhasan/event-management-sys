@@ -1,7 +1,9 @@
-import React, { useContext } from "react";
-import CreateEventForm from "../components/CreateEventForm";
-import { EventContext } from "../contexts/EventContext";
 import "../styles/CreateEventPage.css";
+
+import React, { useContext } from "react";
+import { EventContext } from "../contexts/EventContext";
+
+import CreateEventForm from "../components/CreateEventForm";
 
 const CreateEvent = () => {
   const { addEvent } = useContext(EventContext);

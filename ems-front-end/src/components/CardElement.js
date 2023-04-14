@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
 import "../styles/CardElement.css";
+
+import { Link } from "react-router-dom";
 
 const CardElement = ({ imageSrc, title, text, linkTo, delay }) => {
   return (

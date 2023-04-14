@@ -1,6 +1,8 @@
 import flowerLogo from "../images/flower-logo.png";
-import SideBar from "./SideBar";
+
 import { Link } from "react-router-dom";
+
+import SideBar from "./SideBar";
 
 const NavBar = () => {
   return (
