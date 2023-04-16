@@ -19,8 +19,10 @@
   cursor: pointer;
   color: #6c757d;
   transition: color 0.3s ease;
-  top: -0.5rem;
-  left: 0.5rem;
+  top: 1.5rem;
+  left: 1rem;
+  opacity: 0;
+  animation: fade-up 1s ease-out forwards;
 }
 
 .back-arrow:hover {
@@ -37,8 +39,8 @@
 
 .event-details-participant-count {
   position: absolute;
-  top: -0.5rem;
-  right: 0.5rem;
+  top: 1rem;
+  right: 1rem;
   cursor: pointer;
   padding: 0.5rem 1rem;
   background-color: #f8f9fa;
@@ -77,6 +79,21 @@
   font-size: 1.2rem;
   color: #6c757d;
   margin-bottom: 1rem;
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 1s ease-out forwards;
 }
 
 @media (max-width: 767px) {

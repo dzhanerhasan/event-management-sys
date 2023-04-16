@@ -55,8 +55,8 @@ const EventDetails = () => {
   return (
     <div className="event-details">
       <div className="event-details-wrapper">
-        <FaArrowLeft className="back-arrow" onClick={navigateBack} />
-        <div className="event-details-container container d-flex justify-content-center align-items-center vh-100">
+        <FaArrowLeft className="back-arrow fade-up" onClick={navigateBack} />
+        <div className="event-details-container container d-flex justify-content-center align-items-center vh-100 fade-up">
           <div className="event-details-card card">
             <img className="card-img-top" src={imageUrl} alt={title} />
             <div className="card-body text-center">
@@ -78,7 +78,7 @@ const EventDetails = () => {
           </div>
         </div>
         <div
-          className="event-details-participant-count"
+          className="event-details-participant-count fade-up"
           onClick={toggleParticipantsModal}
         >
           {attendees.length} <FaUsers />

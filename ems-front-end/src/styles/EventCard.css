@@ -26,6 +26,7 @@
 .event-card .card-text {
   display: flex;
   align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .event-card .card-text .fa-users {

@@ -2,6 +2,10 @@
 
 body {
   font-family: "Roboto Mono", monospace, sans-serif;
+  background: linear-gradient(135deg, #8e9eab 0%, #eef2f3 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 .navbar-toggler-icon {
