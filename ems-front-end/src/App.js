@@ -7,12 +7,14 @@ import AllEvents from "./pages/AllEvents";
 import CreateEvent from "./pages/CreateEvent";
 import MyEvents from "./pages/MyEvents";
 import EventDetails from "./pages/EventDetails";
+import Auth from "./pages/Auth";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     children: [
+      { path: "/login", element: <Auth /> },
       { path: "/", element: <HomePage /> },
       { path: "/all-events", element: <AllEvents /> },
       { path: "/create-event", element: <CreateEvent /> },
