@@ -75,3 +75,13 @@ h3 {
   text-align: center;
   margin-top: 1rem;
 }
+
+.errorCard {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}

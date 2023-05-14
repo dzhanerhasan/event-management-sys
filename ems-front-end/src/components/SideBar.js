@@ -1,6 +1,35 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import NavItem from "./NavItem";
 
 const SideBar = () => {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+        const response = await axios.get(
+          "http://localhost:8000/current-user/",
+          config
+        );
+        setUsername(response.data.username);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location = "/";
+  };
+
   return (
     <>
       <button
@@ -21,7 +50,7 @@ const SideBar = () => {
       >
         <div className="offcanvas-header">
           <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-            Hello, User
+            Hello, {username}
           </h5>
           <button
             type="button"
@@ -37,6 +66,9 @@ const SideBar = () => {
             <NavItem text="My Events" linkTo="/my-events" />
             <NavItem text="Create an Event" linkTo="/create-event" />
           </ul>
+          <button onClick={handleLogout} className="btn btn-danger mt-3 w-100">
+            Logout
+          </button>
         </div>
       </div>
     </>
