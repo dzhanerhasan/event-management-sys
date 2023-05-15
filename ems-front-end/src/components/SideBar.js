@@ -27,7 +27,7 @@ const SideBar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location = "/";
+    window.location = "/login";
   };
 
   return (
@@ -59,14 +59,16 @@ const SideBar = () => {
             aria-label="Close"
           ></button>
         </div>
-        <div className="offcanvas-body">
-          <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <NavItem text="Home" linkTo="/" />
-            <NavItem text="All Events" linkTo="/all-events" />
-            <NavItem text="My Events" linkTo="/my-events" />
-            <NavItem text="Create an Event" linkTo="/create-event" />
-          </ul>
-          <button onClick={handleLogout} className="btn btn-danger mt-3 w-100">
+        <div className="offcanvas-body d-flex flex-column justify-content-between">
+          <div>
+            <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+              <NavItem text="Home" linkTo="/" />
+              <NavItem text="All Events" linkTo="/all-events" />
+              <NavItem text="My Events" linkTo="/my-events" />
+              <NavItem text="Create an Event" linkTo="/create-event" />
+            </ul>
+          </div>
+          <button onClick={handleLogout} className="btn mt-3 w-100">
             Logout
           </button>
         </div>
