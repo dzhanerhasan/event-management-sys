@@ -1,7 +1,5 @@
 import "../styles/CreateEventPage.css";
-
 import React, { useState } from "react";
-
 import EventInputField from "../components/EventInputField";
 
 const CreateEventForm = ({ onSubmit }) => {
@@ -14,7 +12,7 @@ const CreateEventForm = ({ onSubmit }) => {
   const [successMessage, setSuccessMessage] = useState(false);
   const [validation, setValidation] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const currentDate = new Date().toISOString().split("T")[0];
     const isDateValid = date >= currentDate;
@@ -22,14 +20,18 @@ const CreateEventForm = ({ onSubmit }) => {
     if (title && description && date && time && location && isDateValid) {
       const defaultImageUrl =
         "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80";
-      onSubmit({
+
+      const eventData = {
         title,
         description,
         date,
         time,
         location,
-        imageUrl: imageUrl || defaultImageUrl,
-      });
+        image_url: imageUrl || defaultImageUrl,
+      };
+
+      await onSubmit(eventData);
+
       setTitle("");
       setDescription("");
       setDate("");

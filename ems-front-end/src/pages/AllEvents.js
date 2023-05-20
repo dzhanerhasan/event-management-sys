@@ -1,28 +1,26 @@
 import "../styles/AllEvents.css";
 
-import React, { useContext, useState } from "react";
-import { EventContext } from "../contexts/EventContext";
-import moment from "moment";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 import NavigationButton from "../components/NavigationButton";
 import EventCard from "../components/EventCard";
 import useAnimation from "../hooks/useAnimation";
 
 const AllEvents = () => {
-  const { events } = useContext(EventContext);
-
-  const sortedEvents = events
-    .filter((event) => moment(event.date + " " + event.time).isSameOrAfter())
-    .sort((a, b) =>
-      moment(a.date + " " + a.time).isBefore(b.date + " " + b.time) ? 1 : -1
-    );
-
+  const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  useEffect(() => {
+    axios.get("http://localhost:8000/api/events/").then((response) => {
+      setEvents(response.data);
+    });
+  }, []);
+
   const indexOfLastEvent = currentPage * itemsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - itemsPerPage;
-  const currentEvents = sortedEvents.slice(indexOfFirstEvent, indexOfLastEvent);
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
 
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));
@@ -30,7 +28,7 @@ const AllEvents = () => {
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) =>
-      prevPage < Math.ceil(sortedEvents.length / itemsPerPage)
+      prevPage < Math.ceil(events.length / itemsPerPage)
         ? prevPage + 1
         : prevPage
     );
@@ -49,7 +47,7 @@ const AllEvents = () => {
           <div className={`row slide-${currentPage}`} ref={rowRef}>
             {currentEvents.map((event, index) => (
               <EventCard
-                key={index}
+                key={event.id}
                 event={event}
                 index={index}
                 delay={(indexOfFirstEvent + index) * 0.1}
@@ -68,9 +66,7 @@ const AllEvents = () => {
         <NavigationButton
           direction="next"
           onClick={handleNextPage}
-          disabled={
-            currentPage === Math.ceil(sortedEvents.length / itemsPerPage)
-          }
+          disabled={currentPage === Math.ceil(events.length / itemsPerPage)}
         />
       </div>
     </div>

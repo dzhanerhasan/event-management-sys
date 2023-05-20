@@ -13,7 +13,7 @@ const SideBar = () => {
           headers: { Authorization: `Bearer ${token}` },
         };
         const response = await axios.get(
-          "http://localhost:8000/current-user/",
+          "http://localhost:8000/api/auth/current-user/",
           config
         );
         setUsername(response.data.username);

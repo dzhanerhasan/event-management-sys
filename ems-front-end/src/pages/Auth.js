@@ -48,8 +48,8 @@ const Auth = () => {
       return;
     }
     const url = showLoginForm
-      ? "http://localhost:8000/api/token/"
-      : "http://localhost:8000/register/";
+      ? "http://localhost:8000/api/auth/token/"
+      : "http://localhost:8000/api/auth/register/";
 
     try {
       const response = await axios.post(
@@ -63,7 +63,9 @@ const Auth = () => {
         "Bearer " + localStorage.getItem("token");
       navigate("/");
     } catch (error) {
-      if (error.response) {
+      if (error.response && error.response.data.detail) {
+        setErrorMessage(error.response.data.detail);
+      } else if (error.response) {
         let message = "";
         const errorData = error.response.data;
         for (const field in errorData) {
