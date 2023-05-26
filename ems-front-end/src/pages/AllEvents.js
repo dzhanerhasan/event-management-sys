@@ -66,7 +66,10 @@ const AllEvents = () => {
         <NavigationButton
           direction="next"
           onClick={handleNextPage}
-          disabled={currentPage === Math.ceil(events.length / itemsPerPage)}
+          disabled={
+            currentPage === Math.ceil(events.length / itemsPerPage) ||
+            events.length < 7
+          }
         />
       </div>
     </div>

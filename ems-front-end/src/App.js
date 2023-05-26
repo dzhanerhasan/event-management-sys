@@ -2,10 +2,8 @@ import { useEffect } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
-  useLocation,
   useNavigate,
 } from "react-router-dom";
-import { EventProvider } from "./contexts/EventContext";
 
 import RootLayout from "./components/RootLayout";
 import HomePage from "./pages/HomePage";
@@ -19,13 +17,12 @@ const isAuthenticated = () => !!localStorage.getItem("token");
 
 const PrivateRoute = ({ children }) => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      navigate("/login", { state: { from: location } });
+      navigate("/login");
     }
-  }, [location, navigate]);
+  }, [navigate]);
 
   return isAuthenticated() ? children : null;
 };
@@ -100,11 +97,7 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  return (
-    <EventProvider>
-      <RouterProvider router={router} />
-    </EventProvider>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;

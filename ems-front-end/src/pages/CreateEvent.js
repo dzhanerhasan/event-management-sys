@@ -1,13 +1,10 @@
 import "../styles/CreateEventPage.css";
-import React, { useContext } from "react";
-import { EventContext } from "../contexts/EventContext";
+import React from "react";
 import axios from "axios";
 
 import CreateEventForm from "../components/CreateEventForm";
 
 const CreateEvent = () => {
-  const { addEvent } = useContext(EventContext);
-
   const handleSubmit = async (eventData) => {
     try {
       const response = await axios.post(
@@ -17,7 +14,7 @@ const CreateEvent = () => {
 
       console.log(eventData);
       if (response.status === 200) {
-        addEvent(eventData);
+        console.log("Event created successfully");
       } else {
         console.error("An error occurred while creating the event.");
       }
