@@ -18,7 +18,7 @@ const ParticipantModal = ({ showModal, toggleModal, participants }) => {
         <FaTimes className="participant-modal-close" onClick={toggleModal} />
         <ul>
           {participants.map((participant, index) => (
-            <li key={index}>{participant}</li>
+            <li key={index}>{participant.username}</li>
           ))}
         </ul>
       </div>

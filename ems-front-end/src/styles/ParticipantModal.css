@@ -19,6 +19,8 @@
   width: 90%;
   position: relative;
   z-index: 1001;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .participant-modal-close {

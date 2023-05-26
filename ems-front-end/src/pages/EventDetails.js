@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FaUsers } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 import moment from "moment";
 import axios from "axios";
@@ -52,6 +53,28 @@ const EventDetails = () => {
       });
   };
 
+  const handleParticipation = () => {
+    axios
+      .post(`http://localhost:8000/api/events/${eventId}/participate/`)
+      .then((response) => {
+        setEvent(response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to participate in event: ", error);
+      });
+  };
+
+  const handleCancellation = () => {
+    axios
+      .post(`http://localhost:8000/api/events/${eventId}/cancel/`)
+      .then((response) => {
+        setEvent(response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to cancel participation: ", error);
+      });
+  };
+
   if (!event || !currentUser) {
     return <p>Loading...</p>;
   }
@@ -60,8 +83,10 @@ const EventDetails = () => {
     event;
 
   const isCreator = created_by.username === currentUser.username;
-  console.log(event);
-  console.log(currentUser);
+  const isParticipant =
+    attendees.find((user) => user.username === currentUser.username) !==
+    undefined;
+
   return (
     <div className="event-details">
       <div className="event-details-wrapper">
@@ -76,9 +101,23 @@ const EventDetails = () => {
                 {moment(time, "HH:mm").format("hh:mm A")}
               </p>
               <p className="card-text">{description}</p>
-              {isCreator && (
+              {isCreator ? (
                 <button className="btn btn-danger mt-3" onClick={handleDelete}>
                   <FaTrashAlt /> Delete
+                </button>
+              ) : isParticipant ? (
+                <button
+                  className="btn btn-danger mt-3"
+                  onClick={handleCancellation}
+                >
+                  Cancel <FaRegCheckCircle />
+                </button>
+              ) : (
+                <button
+                  className="btn btn-success mt-3"
+                  onClick={handleParticipation}
+                >
+                  Participate <FaRegCheckCircle />
                 </button>
               )}
             </div>
