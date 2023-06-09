@@ -33,3 +33,15 @@ class EventViewSet(viewsets.ModelViewSet):
             event.save()
         serializer = self.get_serializer(event)
         return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def my_events(self, request):
+        events = Event.objects.filter(created_by=request.user)
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def participating(self, request):
+        events = Event.objects.filter(attendees=request.user)
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
