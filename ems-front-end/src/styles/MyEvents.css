@@ -1,0 +1,78 @@
+.events-card {
+  width: 500px;
+  height: 500px;
+  overflow-y: auto;
+  border-radius: 15px;
+  border: 1px solid #ccc;
+  padding: 20px 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.event-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.event-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.custom-btn-group > .btn {
+  border-radius: 0;
+  border-color: #aaa;
+}
+
+.custom-btn-group > .btn:first-child {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.custom-btn-group > .btn:last-child {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.custom-btn-group > .btn.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .events-card {
+    width: 100%;
+    height: 500px;
+  }
+}
+
+.btn {
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.events-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.events-card::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.events-card::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.events-card::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
