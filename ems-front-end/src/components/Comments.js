@@ -34,9 +34,9 @@ const Comments = ({
         <strong>{createdBy.username}</strong>
       </div>
       <div className="card-body">
-        {comments.map((comment, i) => (
-          <div className="comment" key={i}>
-            <strong>{comment.username}:</strong> {comment.text}
+        {comments.map((comment) => (
+          <div className="comment" key={comment.id}>
+            <strong>{comment.user.username}:</strong> {comment.text}
           </div>
         ))}
       </div>
@@ -47,7 +47,11 @@ const Comments = ({
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="Comment..."
           />
-          <button className="btn btn-primary" onClick={handleCommentSubmit}>
+          <button
+            className="btn btn-primary"
+            onClick={handleCommentSubmit}
+            disabled={!commentText.trim()}
+          >
             Submit
           </button>
         </div>

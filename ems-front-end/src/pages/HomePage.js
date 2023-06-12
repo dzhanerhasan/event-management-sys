@@ -3,8 +3,11 @@ import viewAllPhoto from "../images/view-all.jpg";
 import CreateEventPhoto from "../images/create-event.jpg";
 import MyEventsPhoto from "../images/my-events.jpg";
 import "../styles/HomePage.css";
+import { useSelector } from "react-redux";
 
 const HomePage = () => {
+  const username = useSelector((state) => state.user.user.username);
+
   return (
     <div className="container-md my-5">
       <h1 className="text-center animated-title">
@@ -33,9 +36,9 @@ const HomePage = () => {
         />
         <CardElement
           imageSrc={MyEventsPhoto}
-          title="My Events"
+          title="My Profile"
           text="Keep track of all the events you have created and those that you are going to attend in one convenient location."
-          linkTo="/my-events"
+          linkTo={`/user-profile/${username}`}
           delay={1.4}
         />
       </div>

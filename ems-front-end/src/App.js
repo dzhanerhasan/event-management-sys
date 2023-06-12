@@ -9,7 +9,7 @@ import RootLayout from "./components/RootLayout";
 import HomePage from "./pages/HomePage";
 import AllEvents from "./pages/AllEvents";
 import CreateEvent from "./pages/CreateEvent";
-import MyEvents from "./pages/MyEvents";
+import UserProfile from "./pages/UserProfile";
 import EventDetails from "./pages/EventDetails";
 import Auth from "./pages/Auth";
 
@@ -77,10 +77,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/my-events",
+        path: "/user-profile/:username",
         element: (
           <PrivateRoute>
-            <MyEvents />
+            <UserProfile />
           </PrivateRoute>
         ),
       },

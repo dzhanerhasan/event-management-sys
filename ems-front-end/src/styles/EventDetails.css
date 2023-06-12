@@ -29,6 +29,10 @@
 .back-arrow:hover {
   color: #495057;
 }
+.event-details-card:hover,
+.comments-card:hover {
+  transform: none;
+}
 
 .event-details-participant-count {
   position: absolute;

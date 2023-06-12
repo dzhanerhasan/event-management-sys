@@ -11,15 +11,17 @@ import axios from "axios";
 import ParticipantModal from "../components/ParticipantModal";
 import Comments from "../components/Comments";
 import "../styles/EventDetails.css";
+import { useSelector } from "react-redux";
 
 const EventDetails = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
 
   const [event, setEvent] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [comments, setComments] = useState([]);
+
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
     axios
@@ -27,12 +29,6 @@ const EventDetails = () => {
       .then((response) => {
         setEvent(response.data);
         setComments(response.data.comments);
-      });
-
-    axios
-      .get(`http://localhost:8000/api/auth/current-user/`)
-      .then((response) => {
-        setCurrentUser(response.data);
       });
   }, [eventId]);
 
@@ -77,17 +73,15 @@ const EventDetails = () => {
       });
   };
 
-  if (!event || !currentUser) {
+  if (!event || !user) {
     return <p>Loading...</p>;
   }
 
   const { title, date, time, description, image_url, attendees, created_by } =
     event;
-
-  const isCreator = created_by.username === currentUser.username;
+  const isCreator = created_by.username === user.username;
   const isParticipant =
-    attendees.find((user) => user.username === currentUser.username) !==
-    undefined;
+    attendees.find((user) => user.username === user.username) !== undefined;
 
   return (
     <div className="event-details">
@@ -133,7 +127,7 @@ const EventDetails = () => {
               eventId={eventId}
               comments={comments}
               setComments={setComments}
-              currentUser={currentUser}
+              currentUser={user}
               createdBy={event.created_by}
             />
           </div>

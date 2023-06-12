@@ -1,34 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../redux/actions/userActions";
 import NavItem from "./NavItem";
 
 const SideBar = () => {
-  const [username, setUsername] = useState("");
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+  console.log(user);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const config = {
-          headers: { Authorization: `Bearer ${token}` },
-        };
-        const response = await axios.get(
-          "http://localhost:8000/api/auth/current-user/",
-          config
-        );
-        setUsername(response.data.username);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
+    dispatch(fetchUser());
+  }, [dispatch]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location = "/login";
   };
+
+  if (!user) {
+    return <div>Loading...</div>; // Or some loading spinner
+  }
 
   return (
     <>
@@ -50,7 +42,7 @@ const SideBar = () => {
       >
         <div className="offcanvas-header">
           <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-            Hello, {username}
+            Hello, {user.username}
           </h5>
           <button
             type="button"
@@ -64,7 +56,10 @@ const SideBar = () => {
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <NavItem text="Home" linkTo="/" />
               <NavItem text="All Events" linkTo="/all-events" />
-              <NavItem text="My Events" linkTo="/my-events" />
+              <NavItem
+                text="My Events"
+                linkTo={`/user-profile/${user.username}`}
+              />
               <NavItem text="Create an Event" linkTo="/create-event" />
             </ul>
           </div>
