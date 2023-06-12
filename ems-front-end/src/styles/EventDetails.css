@@ -8,8 +8,8 @@
 
 .event-details-wrapper {
   position: relative;
-  width: 60%;
-  max-width: 600px;
+  width: 70%;
+  max-width: 700px;
   margin-top: 2rem;
 }
 
@@ -28,14 +28,6 @@
 
 .back-arrow:hover {
   color: #495057;
-}
-
-.event-details-card {
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #fff;
-  width: 100%;
 }
 
 .event-details-participant-count {
@@ -97,8 +89,69 @@
   animation: fade-up 1s ease-out forwards;
 }
 
+.event-details-card,
+.comments-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+}
+
+.event-details-card {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.comments-card {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.card-header,
+.card-body,
+.card-footer {
+  border: none;
+}
+
+.comments-card .card-body {
+  overflow-y: auto;
+}
+
+.comment {
+  margin-bottom: 0.5rem;
+}
+
+.comment-form {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-top: none;
+}
+
+.comment-form textarea {
+  resize: none;
+  margin-right: 1rem;
+  height: 2rem;
+  border-radius: 50px;
+  border: 1px solid #ced4da;
+  overflow: hidden;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.comment-form button {
+  border-radius: 50px;
+  padding: 0.2rem 1rem;
+}
+
 @media (max-width: 767px) {
   .event-details-wrapper {
     width: 95%;
+  }
+
+  .event-details-card,
+  .comments-card {
+    flex: 100%;
+    border-radius: 10px;
   }
 }

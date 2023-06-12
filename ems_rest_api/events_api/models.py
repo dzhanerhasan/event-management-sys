@@ -13,3 +13,16 @@ class Event(models.Model):
         User, related_name="created_events", on_delete=models.CASCADE
     )
     attendees = models.ManyToManyField(User, related_name="attended_events", blank=True)
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, related_name="comments", on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.user.username}: {self.text[:20]}..."

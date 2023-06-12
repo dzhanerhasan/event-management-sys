@@ -1,16 +1,16 @@
-import "../styles/EventDetails.css";
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaUsers } from "react-icons/fa";
-import { FaArrowLeft } from "react-icons/fa";
-import { FaTrashAlt } from "react-icons/fa";
-import { FaRegCheckCircle } from "react-icons/fa";
-
+import {
+  FaUsers,
+  FaArrowLeft,
+  FaTrashAlt,
+  FaRegCheckCircle,
+} from "react-icons/fa";
 import moment from "moment";
 import axios from "axios";
-
 import ParticipantModal from "../components/ParticipantModal";
+import Comments from "../components/Comments";
+import "../styles/EventDetails.css";
 
 const EventDetails = () => {
   const { eventId } = useParams();
@@ -19,12 +19,14 @@ const EventDetails = () => {
   const [event, setEvent] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     axios
       .get(`http://localhost:8000/api/events/${eventId}`)
       .then((response) => {
         setEvent(response.data);
+        setComments(response.data.comments);
       });
 
     axios
@@ -91,44 +93,59 @@ const EventDetails = () => {
     <div className="event-details">
       <div className="event-details-wrapper">
         <FaArrowLeft className="back-arrow fade-up" onClick={navigateBack} />
+
         <div className="event-details-container container d-flex justify-content-center align-items-center vh-100 fade-up">
-          <div className="event-details-card card">
-            <img className="card-img-top" src={image_url} alt={title} />
-            <div className="card-body text-center">
-              <h2 className="card-title">{title}</h2>
-              <p className="text-muted">
-                {moment(date).format("MMMM Do, YYYY")} -{" "}
-                {moment(time, "HH:mm").format("hh:mm A")}
-              </p>
-              <p className="card-text">{description}</p>
-              {isCreator ? (
-                <button className="btn btn-danger mt-3" onClick={handleDelete}>
-                  <FaTrashAlt /> Delete
-                </button>
-              ) : isParticipant ? (
-                <button
-                  className="btn btn-danger mt-3"
-                  onClick={handleCancellation}
-                >
-                  Cancel <FaRegCheckCircle />
-                </button>
-              ) : (
-                <button
-                  className="btn btn-success mt-3"
-                  onClick={handleParticipation}
-                >
-                  Participate <FaRegCheckCircle />
-                </button>
-              )}
+          <div className="d-flex flex-row justify-content-center align-items-stretch">
+            <div className="event-details-card card mr-3">
+              <img className="card-img-top" src={image_url} alt={title} />
+              <div className="card-body text-center">
+                <h2 className="card-title">{title}</h2>
+                <p className="text-muted">
+                  {moment(date).format("MMMM Do, YYYY")} -{" "}
+                  {moment(time, "HH:mm").format("hh:mm A")}
+                </p>
+                <p className="card-text">{description}</p>
+                {isCreator ? (
+                  <button
+                    className="btn btn-danger mt-3"
+                    onClick={handleDelete}
+                  >
+                    <FaTrashAlt /> Delete
+                  </button>
+                ) : isParticipant ? (
+                  <button
+                    className="btn btn-danger mt-3"
+                    onClick={handleCancellation}
+                  >
+                    Cancel <FaRegCheckCircle />
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-success mt-3"
+                    onClick={handleParticipation}
+                  >
+                    Participate <FaRegCheckCircle />
+                  </button>
+                )}
+              </div>
             </div>
+            <Comments
+              eventId={eventId}
+              comments={comments}
+              setComments={setComments}
+              currentUser={currentUser}
+              createdBy={event.created_by}
+            />
           </div>
         </div>
+
         <div
           className="event-details-participant-count fade-up"
           onClick={toggleParticipantsModal}
         >
           {attendees.length} <FaUsers />
         </div>
+
         <ParticipantModal
           showModal={modalVisible}
           toggleModal={toggleParticipantsModal}
