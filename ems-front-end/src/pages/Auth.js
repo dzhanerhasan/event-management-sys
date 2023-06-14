@@ -10,6 +10,7 @@ const Auth = () => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
@@ -32,6 +33,10 @@ const Auth = () => {
       errors.push("Passwords do not match");
     }
 
+    if (!showLoginForm && !email.trim()) {
+      errors.push("Email cannot be empty");
+    }
+
     if (errors.length) {
       setErrorMessage(errors.join("\n"));
       return false;
@@ -48,6 +53,7 @@ const Auth = () => {
     setPasswordConfirm("");
     setFirstName("");
     setLastName("");
+    setEmail(""); // resetting email state variable
   };
 
   const handleSubmit = async (event) => {
@@ -64,7 +70,13 @@ const Auth = () => {
         url,
         showLoginForm
           ? { username, password }
-          : { username, password, firstName, lastName }
+          : {
+              username,
+              password,
+              email,
+              first_name: firstName,
+              last_name: lastName,
+            }
       );
       localStorage.setItem("token", response.data.access);
       axios.defaults.headers.common["Authorization"] =
@@ -105,6 +117,18 @@ const Auth = () => {
               required
             />
           </div>
+          {!showLoginForm && (
+            <div className="formGroup">
+              <input
+                type="email"
+                className="formControl"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+          )}
           <div className="formGroup">
             <input
               type="password"

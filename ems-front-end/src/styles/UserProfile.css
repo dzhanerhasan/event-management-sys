@@ -73,3 +73,22 @@
 .card.event-card::-webkit-scrollbar-track {
   background-color: #f5f5f5;
 }
+
+.edit-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-info > input {
+  margin-bottom: 10px;
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.user-buttons {
+  display: flex;
+  justify-content: flex-end;
+}

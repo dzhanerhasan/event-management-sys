@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 
 const HomePage = () => {
   const username = useSelector((state) => state.user.user.username);
-
+  console.log(username);
   return (
     <div className="container-md my-5">
       <h1 className="text-center animated-title">

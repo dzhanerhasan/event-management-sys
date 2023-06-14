@@ -35,7 +35,7 @@ export const fetchUser = () => {
     axios
       .get("http://localhost:8000/api/users/current-user/", config)
       .then((response) => {
-        const user = response.data;
+        const user = response.data.user;
         dispatch(fetchUserSuccess(user));
       })
       .catch((error) => {
