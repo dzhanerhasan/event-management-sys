@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "auth_api",
+    "user_profile",
     "events_api",
 ]
 

@@ -35,14 +35,16 @@ class EventViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, methods=["get"])
-    def my_events(self, request):
-        events = Event.objects.filter(created_by=request.user)
+    def my_events(self, request, username=None):
+        user = User.objects.get(username=username)
+        events = Event.objects.filter(created_by=user)
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=["get"])
-    def participating(self, request):
-        events = Event.objects.filter(attendees=request.user)
+    def participating(self, request, username=None):
+        user = User.objects.get(username=username)
+        events = Event.objects.filter(attendees=user)
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
 
