@@ -85,13 +85,19 @@ const FriendRequestButton = ({ username }) => {
   return (
     <>
       {requestStatus === null && (
-        <button onClick={sendFriendRequest}>Send Friend Request</button>
+        <button className="btn btn-primary" onClick={sendFriendRequest}>
+          Send Friend Request
+        </button>
       )}
       {requestStatus === "pending" && (
-        <button onClick={cancelFriendRequest}>Cancel Friend Request</button>
+        <button className="btn btn-secondary" onClick={cancelFriendRequest}>
+          Cancel Friend Request
+        </button>
       )}
       {requestStatus === "friends" && (
-        <button onClick={removeFriend}>Remove Friend</button>
+        <button className="btn btn-danger" onClick={removeFriend}>
+          Remove Friend
+        </button>
       )}
     </>
   );

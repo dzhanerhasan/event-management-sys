@@ -1,0 +1,12 @@
+.user-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.user-buttons .btn {
+  transition: 0.3s;
+}
+
+.user-buttons .btn:hover {
+  transform: scale(1.05);
+}

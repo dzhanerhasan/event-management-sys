@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import FriendRequestButton from "./FriendRequestButton";
+import "../styles/UserInfoCard.css";
 
 const UserInfoCard = ({ profile }) => {
   const [editMode, setEditMode] = useState(false);
@@ -34,7 +35,7 @@ const UserInfoCard = ({ profile }) => {
   };
 
   return (
-    <div className="col-md-5 m-3 card custom-card rounded">
+    <div className="col-md-5 m-3 card custom-card rounded position-relative">
       <div className="card-body">
         <h5 className="card-title">{profile.user.username}</h5>
         {editMode ? (
@@ -43,16 +44,19 @@ const UserInfoCard = ({ profile }) => {
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              className="form-control mb-2"
             />
             <input
               type="text"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              className="form-control mb-2"
             />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="form-control mb-2"
             />
             <div className="edit-buttons float-right">
               <button className="btn btn-primary mr-2" onClick={handleSave}>
@@ -68,21 +72,24 @@ const UserInfoCard = ({ profile }) => {
             <p className="card-text">First Name: {firstName}</p>
             <p className="card-text">Last Name: {lastName}</p>
             <p className="card-text">Email: {email}</p>
-            <div className="user-buttons float-right">
-              {username === currentUser && (
-                <button className="btn btn-primary mr-2" onClick={handleEdit}>
-                  Edit
-                </button>
-              )}
-              {username === currentUser ? (
-                <button className="btn btn-secondary">Settings</button>
-              ) : (
-                <FriendRequestButton username={profile.user.username} />
-              )}
-            </div>
           </>
         )}
       </div>
+      {!editMode && (
+        <div className="user-buttons position-absolute bottom-0 end-0 p-3">
+          {username === currentUser && (
+            <>
+              <button className="btn btn-primary mr-2" onClick={handleEdit}>
+                Edit
+              </button>
+              <button className="btn btn-secondary">Settings</button>
+            </>
+          )}
+          {username !== currentUser && (
+            <FriendRequestButton username={profile.user.username} />
+          )}
+        </div>
+      )}
     </div>
   );
 };
