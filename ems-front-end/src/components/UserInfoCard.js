@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -12,6 +12,12 @@ const UserInfoCard = ({ profile }) => {
   const [email, setEmail] = useState(profile.user.email);
   const { username } = useParams();
   const currentUser = useSelector((state) => state.user.user.username);
+
+  useEffect(() => {
+    setFirstName(profile.user.first_name);
+    setLastName(profile.user.last_name);
+    setEmail(profile.user.email);
+  }, [profile]);
 
   const handleEdit = () => {
     setEditMode(true);

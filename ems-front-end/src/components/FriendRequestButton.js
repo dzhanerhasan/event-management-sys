@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { fetchFriends, deleteFriend } from "../redux/actions/userActions";
@@ -14,12 +14,14 @@ const FriendRequestButton = ({ username }) => {
     Authorization: `Bearer ${token}`,
   };
 
-  const checkRequestStatus = () => {
+  const checkRequestStatus = useCallback(() => {
     axios
       .get(`http://localhost:8000/api/users/profile/${username}/`, {
         headers,
       })
       .then((response) => {
+        console.log(response.data);
+
         if (
           response.data.friends &&
           response.data.friends.includes(currentUser)
@@ -32,12 +34,12 @@ const FriendRequestButton = ({ username }) => {
         }
       })
       .catch((error) => console.error(`Error: ${error}`));
-  };
+  }, [currentUser, username, headers]);
 
   useEffect(() => {
     dispatch(fetchFriends(currentUser));
     checkRequestStatus();
-  }, [username, dispatch]);
+  }, [username, dispatch, currentUser, checkRequestStatus]);
 
   const sendFriendRequest = () => {
     axios

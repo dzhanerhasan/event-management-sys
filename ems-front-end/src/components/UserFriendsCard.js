@@ -1,10 +1,7 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const UserFriendsCard = () => {
-  const friends = useSelector((state) => state.user.friends);
-
+const UserFriendsCard = ({ friends }) => {
   return (
     <div className="col-md-5 m-3 card custom-card rounded">
       <div className="card-body">
