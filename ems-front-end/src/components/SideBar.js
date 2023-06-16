@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../redux/actions/userActions";
 import NavItem from "./NavItem";
@@ -19,7 +18,7 @@ const SideBar = () => {
   };
 
   if (!user) {
-    return <div>Loading...</div>; // Or some loading spinner
+    return <div>Loading...</div>;
   }
 
   return (
@@ -57,7 +56,7 @@ const SideBar = () => {
               <NavItem text="Home" linkTo="/" />
               <NavItem text="All Events" linkTo="/all-events" />
               <NavItem
-                text="My Events"
+                text="Profile"
                 linkTo={`/user-profile/${user.username}`}
               />
               <NavItem text="Create an Event" linkTo="/create-event" />

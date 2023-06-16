@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import FriendRequestButton from "./FriendRequestButton";
 
 const UserInfoCard = ({ profile }) => {
   const [editMode, setEditMode] = useState(false);
@@ -11,22 +12,13 @@ const UserInfoCard = ({ profile }) => {
   const { username } = useParams();
   const currentUser = useSelector((state) => state.user.user.username);
 
-  const sendFriendRequest = (username) => {
-    axios
-      .post(`http://localhost:8000/api/users/send-friend-request/${username}`)
-      .then((res) => {
-        alert(res.data.message);
-      })
-      .catch((err) => console.log(err));
-  };
-
   const handleEdit = () => {
     setEditMode(true);
   };
 
   const handleSave = () => {
     axios
-      .put(`http://localhost:8000/api/users/profile/${username}`, {
+      .put(`http://localhost:8000/api/users/profile/${username}/`, {
         first_name: firstName,
         last_name: lastName,
         email: email,
@@ -85,12 +77,7 @@ const UserInfoCard = ({ profile }) => {
               {username === currentUser ? (
                 <button className="btn btn-secondary">Settings</button>
               ) : (
-                <button
-                  className="btn btn-primary"
-                  onClick={() => sendFriendRequest(profile.user.username)}
-                >
-                  Send Friend Request
-                </button>
+                <FriendRequestButton username={profile.user.username} />
               )}
             </div>
           </>

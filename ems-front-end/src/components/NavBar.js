@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import flowerLogo from "../images/flower-logo.png";
 import { Link } from "react-router-dom";
 import SideBar from "./SideBar";
+import FriendRequests from "./FriendRequests";
 
 const NavBar = () => {
   const location = useLocation();
@@ -14,7 +15,10 @@ const NavBar = () => {
             <img src={flowerLogo} alt="Daisy Pic" width="40vh" />
           </Link>
         </a>
-        {location.pathname !== "/login" && <SideBar />}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {location.pathname !== "/login" && <FriendRequests />}
+          {location.pathname !== "/login" && <SideBar />}
+        </div>
       </div>
     </nav>
   );
