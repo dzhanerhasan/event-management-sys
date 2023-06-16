@@ -41,7 +41,7 @@ class UserProfileDetailView(APIView):
     def get(self, request, username):
         user = get_object_or_404(User, username=username)
         profile = UserProfile.objects.get(user=user)
-        serializer = UserProfileSerializer(profile)
+        serializer = UserProfileSerializer(profile, context={"request": request})
         return Response(serializer.data)
 
 
@@ -56,12 +56,14 @@ class SendFriendRequestView(APIView):
                 {"error": "You cannot send a friend request to yourself."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        if FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
+        if FriendRequest.objects.filter(
+            sender=from_user.profile, receiver=to_user.profile
+        ).exists():
             return Response(
                 {"error": "Friend request already sent."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        FriendRequest.objects.create(from_user=from_user, to_user=to_user)
+        FriendRequest.objects.create(sender=from_user.profile, receiver=to_user.profile)
         return Response({"message": f"Friend request sent to {to_user.username}."})
 
 
@@ -70,13 +72,13 @@ class FriendRequestResponseView(APIView):
 
     def post(self, request, request_id, action):
         friend_request = get_object_or_404(FriendRequest, id=request_id)
-        if friend_request.to_user != request.user:
+        if friend_request.receiver.user != request.user:
             return Response(
                 {"error": "This is not your friend request to respond."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         if action == "accept":
-            friend_request.to_user.profile.friends.add(friend_request.from_user.profile)
+            friend_request.receiver.friends.add(friend_request.sender)
             friend_request.delete()
         elif action == "reject":
             friend_request.delete()
@@ -91,6 +93,42 @@ class PendingFriendRequestsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        friend_requests = FriendRequest.objects.filter(to_user=request.user)
+        friend_requests = FriendRequest.objects.filter(receiver=request.user.profile)
         serializer = FriendRequestSerializer(friend_requests, many=True)
         return Response(serializer.data)
+
+
+class CancelFriendRequestView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, username):
+        to_user = get_object_or_404(User, username=username)
+        from_user = request.user
+        try:
+            friend_request = FriendRequest.objects.get(
+                sender=from_user.profile, receiver=to_user.profile
+            )
+        except FriendRequest.DoesNotExist:
+            return Response(
+                {"error": "No friend request to cancel."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        friend_request.delete()
+        return Response({"message": f"Friend request to {to_user.username} cancelled."})
+
+
+class DeleteFriendView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, username):
+        to_user = get_object_or_404(User, username=username)
+        from_user = request.user
+        if from_user.profile not in to_user.profile.friends.all():
+            return Response(
+                {"error": "The user is not in your friend list."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        from_user.profile.friends.remove(to_user.profile)
+        return Response(
+            {"message": f"{to_user.username} removed from your friend list."}
+        )

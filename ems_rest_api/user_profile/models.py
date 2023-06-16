@@ -16,10 +16,12 @@ class UserProfile(models.Model):
 
 class FriendRequest(models.Model):
     PENDING = "P"
+    CANCELLED = "C"
     ACCEPTED = "A"
     REJECTED = "R"
     STATUS_CHOICES = [
         (PENDING, "Pending"),
+        (CANCELLED, "Cancelled"),
         (ACCEPTED, "Accepted"),
         (REJECTED, "Rejected"),
     ]

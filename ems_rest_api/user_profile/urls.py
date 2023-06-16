@@ -1,5 +1,7 @@
 from django.urls import path
 from .views import (
+    CancelFriendRequestView,
+    DeleteFriendView,
     UserProfileUpdateView,
     CurrentUserView,
     UserProfileDetailView,
@@ -34,5 +36,15 @@ urlpatterns = [
         "pending-friend-requests/",
         PendingFriendRequestsView.as_view(),
         name="pending-friend-requests",
+    ),
+    path(
+        "cancel-friend-request/<str:username>/",
+        CancelFriendRequestView.as_view(),
+        name="cancel-friend-request",
+    ),
+    path(
+        "delete-friend/<str:username>/",
+        DeleteFriendView.as_view(),
+        name="delete-friend",
     ),
 ]
