@@ -6,7 +6,6 @@ import NavItem from "./NavItem";
 const SideBar = () => {
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-  console.log(user);
 
   useEffect(() => {
     dispatch(fetchUser());

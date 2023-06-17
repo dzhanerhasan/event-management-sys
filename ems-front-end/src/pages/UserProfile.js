@@ -46,7 +46,10 @@ const UserProfile = () => {
 
       <div className="row justify-content-center">
         <UserEventsCard events={events} view={view} setView={setView} />
-        <UserFriendsCard friends={profile.friends} />
+        <UserFriendsCard
+          username={profile.username}
+          friends={profile.friends}
+        />
       </div>
     </div>
   );

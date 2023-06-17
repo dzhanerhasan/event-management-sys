@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import axios from "axios";
-import { fetchFriends, deleteFriend } from "../redux/actions/userActions";
 
 const FriendRequestButton = ({ username }) => {
   const currentUser = useSelector((state) => state.user?.user?.username);
-  const dispatch = useDispatch();
 
   const [requestStatus, setRequestStatus] = useState(null);
 
@@ -14,14 +12,12 @@ const FriendRequestButton = ({ username }) => {
     Authorization: `Bearer ${token}`,
   };
 
-  const checkRequestStatus = useCallback(() => {
+  const checkRequestStatus = () => {
     axios
       .get(`http://localhost:8000/api/users/profile/${username}/`, {
         headers,
       })
       .then((response) => {
-        console.log(response.data);
-
         if (
           response.data.friends &&
           response.data.friends.includes(currentUser)
@@ -34,12 +30,11 @@ const FriendRequestButton = ({ username }) => {
         }
       })
       .catch((error) => console.error(`Error: ${error}`));
-  }, [currentUser, username, headers]);
+  };
 
   useEffect(() => {
-    dispatch(fetchFriends(currentUser));
     checkRequestStatus();
-  }, [username, dispatch, currentUser, checkRequestStatus]);
+  }, [username]);
 
   const sendFriendRequest = () => {
     axios
@@ -49,7 +44,6 @@ const FriendRequestButton = ({ username }) => {
         { headers }
       )
       .then(() => {
-        dispatch(fetchFriends(currentUser));
         checkRequestStatus();
       })
       .catch((error) => console.error(`Error: ${error}`));
@@ -63,22 +57,6 @@ const FriendRequestButton = ({ username }) => {
         { headers }
       )
       .then(() => {
-        dispatch(fetchFriends(currentUser));
-        checkRequestStatus();
-      })
-      .catch((error) => console.error(`Error: ${error}`));
-  };
-
-  const removeFriend = () => {
-    axios
-      .post(
-        `http://localhost:8000/api/users/delete-friend/${username}/`,
-        {},
-        { headers }
-      )
-      .then(() => {
-        dispatch(deleteFriend(username));
-        dispatch(fetchFriends(currentUser));
         checkRequestStatus();
       })
       .catch((error) => console.error(`Error: ${error}`));
@@ -93,12 +71,7 @@ const FriendRequestButton = ({ username }) => {
       )}
       {requestStatus === "pending" && (
         <button className="btn btn-secondary" onClick={cancelFriendRequest}>
-          Cancel Friend Request
-        </button>
-      )}
-      {requestStatus === "friends" && (
-        <button className="btn btn-danger" onClick={removeFriend}>
-          Remove Friend
+          Remove Friend Request
         </button>
       )}
     </>
