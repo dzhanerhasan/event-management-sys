@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const FriendRequestButton = ({ profile }) => {
+const FriendRequestButton = ({ profile, setProfile }) => {
   const currentUser = useSelector((state) => state.user?.user?.username);
   const [requestStatus, setRequestStatus] = useState(null);
   const username = useParams().username;
@@ -33,8 +33,9 @@ const FriendRequestButton = ({ profile }) => {
         {},
         { headers }
       )
-      .then(() => {
-        checkRequestStatus();
+      .then((response) => {
+        setRequestStatus("pending");
+        setProfile(response.data);
       })
       .catch((error) => console.error(`Error: ${error}`));
   };
@@ -46,11 +47,14 @@ const FriendRequestButton = ({ profile }) => {
         {},
         { headers }
       )
-      .then(() => {
-        checkRequestStatus();
+      .then((response) => {
+        setRequestStatus(null);
+        setProfile(response.data);
       })
       .catch((error) => console.error(`Error: ${error}`));
   };
+
+  console.log(requestStatus);
 
   return (
     <>

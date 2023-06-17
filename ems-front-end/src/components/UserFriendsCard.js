@@ -1,29 +1,33 @@
-import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
-const UserFriendsCard = ({ friends, username }) => {
-  const [currentFriends, setCurrentFriends] = useState([]);
-
+const UserFriendsCard = ({ profile }) => {
   const currentUser = useSelector((state) => state.user?.user?.username);
-
+  const [currentProfile, setCurrentProfile] = useState(profile);
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`,
   };
 
   useEffect(() => {
-    setCurrentFriends(friends);
-  }, [friends]);
+    setCurrentProfile(profile);
+  }, [profile]);
 
-  const removeFriend = (friend) => {
+  const removeFriendAndUpdateProfile = (friend) => {
     axios
       .post(
         `http://localhost:8000/api/users/delete-friend/${friend}/`,
         {},
         { headers }
       )
+      .then(() => {
+        setCurrentProfile((prevProfile) => ({
+          ...prevProfile,
+          friends: prevProfile.friends.filter((f) => f !== friend),
+        }));
+      })
       .catch((error) => console.error(`Error: ${error}`));
   };
 
@@ -32,18 +36,20 @@ const UserFriendsCard = ({ friends, username }) => {
       <div className="card-body">
         <h5 className="card-title">Friends</h5>
         <ul className="list-group">
-          {currentFriends &&
-            currentFriends.map((friend) => (
+          {currentProfile.friends &&
+            currentProfile.friends.map((friend) => (
               <li key={friend} className="list-group-item">
-                <Link to={`/user-profile/${friend}`}>{friend}</Link>
-                {currentUser === username && (
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => removeFriend(friend)}
-                  >
-                    Remove Friend
-                  </button>
-                )}
+                <div className="d-flex justify-content-between align-items-center">
+                  <Link to={`/user-profile/${friend}`}>{friend}</Link>
+                  {currentUser === currentProfile.user.username && (
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => removeFriendAndUpdateProfile(friend)}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
               </li>
             ))}
         </ul>

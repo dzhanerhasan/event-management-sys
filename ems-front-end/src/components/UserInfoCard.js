@@ -6,17 +6,24 @@ import FriendRequestButton from "./FriendRequestButton";
 import "../styles/UserInfoCard.css";
 
 const UserInfoCard = ({ profile }) => {
-  const [currentProfile, setCurrentProfile] = useState(profile);
   const [editMode, setEditMode] = useState(false);
-  const [firstName, setFirstName] = useState(currentProfile.user.first_name);
-  const [lastName, setLastName] = useState(currentProfile.user.last_name);
-  const [email, setEmail] = useState(currentProfile.user.email);
+  const [firstName, setFirstName] = useState(profile.user.first_name);
+  const [lastName, setLastName] = useState(profile.user.last_name);
+  const [email, setEmail] = useState(profile.user.email);
+  const [picture, setPicture] = useState(profile.user.picture);
   const { username } = useParams();
   const currentUser = useSelector((state) => state.user.user.username);
 
   useEffect(() => {
-    setCurrentProfile(profile);
+    setFirstName(profile.user.first_name);
+    setLastName(profile.user.last_name);
+    setEmail(profile.user.email);
   }, [profile]);
+
+  const token = localStorage.getItem("token");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
 
   const handleEdit = () => {
     setEditMode(true);
@@ -24,11 +31,18 @@ const UserInfoCard = ({ profile }) => {
 
   const handleSave = () => {
     axios
-      .put(`http://localhost:8000/api/users/profile/${username}/`, {
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-      })
+      .put(
+        `http://localhost:8000/api/users/profile-update/${username}/`,
+        {
+          user: {
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+          },
+          picture: picture,
+        },
+        { headers }
+      )
       .then((res) => {
         setEditMode(false);
       })
@@ -63,7 +77,7 @@ const UserInfoCard = ({ profile }) => {
               onChange={(e) => setEmail(e.target.value)}
               className="form-control mb-2"
             />
-            <div className="edit-buttons float-right">
+            <div className="user-buttons position-absolute bottom-0 end-0 p-3">
               <button className="btn btn-primary mr-2" onClick={handleSave}>
                 Save
               </button>

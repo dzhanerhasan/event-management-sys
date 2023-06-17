@@ -24,8 +24,6 @@ const UserProfile = () => {
     return null;
   }
 
-  console.log(profile);
-
   return (
     <div className="container my-5">
       <h1 className="text-center">User Profile</h1>
@@ -37,7 +35,7 @@ const UserProfile = () => {
 
       <div className="row justify-content-center">
         <UserEventsCard username={username} />
-        <UserFriendsCard username={username} friends={profile.friends} />
+        <UserFriendsCard profile={profile} />
       </div>
     </div>
   );
