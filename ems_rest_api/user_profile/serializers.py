@@ -18,29 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class FriendRequestSerializer(serializers.ModelSerializer):
-    sender_username = serializers.SerializerMethodField("get_sender_username")
-    receiver_username = serializers.SerializerMethodField("get_receiver_username")
-    status = serializers.CharField(source="get_status_display")
-
-    class Meta:
-        model = FriendRequest
-        fields = [
-            "id",
-            "sender",
-            "receiver",
-            "status",
-            "sender_username",
-            "receiver_username",
-        ]
-
-    def get_sender_username(self, obj):
-        return obj.sender.user.username
-
-    def get_receiver_username(self, obj):
-        return obj.receiver.user.username
-
-
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     friends = serializers.SerializerMethodField()
@@ -63,3 +40,54 @@ class UserProfileSerializer(serializers.ModelSerializer):
             if friend_request:
                 return friend_request.get_status_display()
         return None
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email"]
+
+
+class UserProfileUpdateSerializer(serializers.ModelSerializer):
+    user = UserUpdateSerializer()
+
+    class Meta:
+        model = UserProfile
+        fields = ["user", "picture"]
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop("user")
+        user = instance.user
+
+        instance.picture = validated_data.get("picture", instance.picture)
+        instance.save()
+
+        user.first_name = user_data.get("first_name", user.first_name)
+        user.last_name = user_data.get("last_name", user.last_name)
+        user.email = user_data.get("email", user.email)
+        user.save()
+
+        return instance
+
+
+class FriendRequestSerializer(serializers.ModelSerializer):
+    sender_username = serializers.SerializerMethodField("get_sender_username")
+    receiver_username = serializers.SerializerMethodField("get_receiver_username")
+    status = serializers.CharField(source="get_status_display")
+
+    class Meta:
+        model = FriendRequest
+        fields = [
+            "id",
+            "sender",
+            "receiver",
+            "status",
+            "sender_username",
+            "receiver_username",
+        ]
+
+    def get_sender_username(self, obj):
+        return obj.sender.user.username
+
+    def get_receiver_username(self, obj):
+        return obj.receiver.user.username

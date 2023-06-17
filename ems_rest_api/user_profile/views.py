@@ -4,7 +4,12 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import UserProfile, FriendRequest
-from .serializers import UserSerializer, UserProfileSerializer, FriendRequestSerializer
+from .serializers import (
+    UserProfileUpdateSerializer,
+    UserSerializer,
+    UserProfileSerializer,
+    FriendRequestSerializer,
+)
 
 
 class CurrentUserView(APIView):
@@ -30,7 +35,7 @@ class UserProfileUpdateView(APIView):
                 status=status.HTTP_403_FORBIDDEN,
             )
         profile = UserProfile.objects.get(user=user)
-        serializer = UserProfileSerializer(profile, data=request.data)
+        serializer = UserProfileUpdateSerializer(profile, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -64,7 +69,12 @@ class SendFriendRequestView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         FriendRequest.objects.create(sender=from_user.profile, receiver=to_user.profile)
-        return Response({"message": f"Friend request sent to {to_user.username}."})
+        updated_profile = UserProfile.objects.get(user=to_user)
+        serializer = UserProfileSerializer(
+            updated_profile, context={"request": request}
+        )
+
+        return Response(serializer.data)
 
 
 class FriendRequestResponseView(APIView):
@@ -114,7 +124,12 @@ class CancelFriendRequestView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         friend_request.delete()
-        return Response({"message": f"Friend request to {to_user.username} cancelled."})
+        updated_profile = UserProfile.objects.get(user=to_user)
+        serializer = UserProfileSerializer(
+            updated_profile, context={"request": request}
+        )
+
+        return Response(serializer.data)
 
 
 class DeleteFriendView(APIView):
