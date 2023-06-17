@@ -6,17 +6,16 @@ import FriendRequestButton from "./FriendRequestButton";
 import "../styles/UserInfoCard.css";
 
 const UserInfoCard = ({ profile }) => {
+  const [currentProfile, setCurrentProfile] = useState(profile);
   const [editMode, setEditMode] = useState(false);
-  const [firstName, setFirstName] = useState(profile.user.first_name);
-  const [lastName, setLastName] = useState(profile.user.last_name);
-  const [email, setEmail] = useState(profile.user.email);
+  const [firstName, setFirstName] = useState(currentProfile.user.first_name);
+  const [lastName, setLastName] = useState(currentProfile.user.last_name);
+  const [email, setEmail] = useState(currentProfile.user.email);
   const { username } = useParams();
   const currentUser = useSelector((state) => state.user.user.username);
 
   useEffect(() => {
-    setFirstName(profile.user.first_name);
-    setLastName(profile.user.last_name);
-    setEmail(profile.user.email);
+    setCurrentProfile(profile);
   }, [profile]);
 
   const handleEdit = () => {
@@ -92,7 +91,7 @@ const UserInfoCard = ({ profile }) => {
             </>
           )}
           {username !== currentUser && (
-            <FriendRequestButton username={profile.user.username} />
+            <FriendRequestButton profile={profile} />
           )}
         </div>
       )}

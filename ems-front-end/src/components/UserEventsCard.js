@@ -1,8 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const UserEventsCard = ({ events, view, setView }) => {
+const UserEventsCard = ({ username }) => {
+  const [view, setView] = useState("created");
+  const [events, setEvents] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const url =
+      view === "created"
+        ? `http://localhost:8000/api/events/my_events/${username}`
+        : `http://localhost:8000/api/events/participating/${username}`;
+
+    axios.get(url).then((res) => {
+      setEvents(res.data);
+    });
+  }, [view, username]);
+
+  useEffect(() => {
+    setView("created");
+  }, [username]);
 
   return (
     <div className="col-md-5 m-3 card custom-card rounded">

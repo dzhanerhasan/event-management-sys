@@ -1,40 +1,30 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const FriendRequestButton = ({ username }) => {
+const FriendRequestButton = ({ profile }) => {
   const currentUser = useSelector((state) => state.user?.user?.username);
-
   const [requestStatus, setRequestStatus] = useState(null);
-
+  const username = useParams().username;
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`,
   };
 
   const checkRequestStatus = () => {
-    axios
-      .get(`http://localhost:8000/api/users/profile/${username}/`, {
-        headers,
-      })
-      .then((response) => {
-        if (
-          response.data.friends &&
-          response.data.friends.includes(currentUser)
-        ) {
-          setRequestStatus("friends");
-        } else if (response.data.friend_request_status === "Pending") {
-          setRequestStatus("pending");
-        } else {
-          setRequestStatus(null);
-        }
-      })
-      .catch((error) => console.error(`Error: ${error}`));
+    if (profile.friends && profile.friends.includes(currentUser)) {
+      setRequestStatus("friends");
+    } else if (profile.friend_request_status === "Pending") {
+      setRequestStatus("pending");
+    } else {
+      setRequestStatus(null);
+    }
   };
 
   useEffect(() => {
     checkRequestStatus();
-  }, [username]);
+  }, [profile]);
 
   const sendFriendRequest = () => {
     axios

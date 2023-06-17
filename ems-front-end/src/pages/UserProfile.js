@@ -8,32 +8,23 @@ import UserEventsCard from "../components/UserEventsCard";
 import UserFriendsCard from "../components/UserFriendsCard";
 
 const UserProfile = () => {
-  const [view, setView] = useState("created");
-  const [events, setEvents] = useState([]);
   const [profile, setProfile] = useState(null);
   const { username } = useParams();
 
   useEffect(() => {
-    const url =
-      view === "created"
-        ? `http://localhost:8000/api/events/my_events/${username}`
-        : `http://localhost:8000/api/events/participating/${username}`;
-
-    axios.get(url).then((res) => {
-      setEvents(res.data);
-    });
-
     axios
       .get(`http://localhost:8000/api/users/profile/${username}`)
       .then((res) => {
         setProfile(res.data);
       })
       .catch((err) => console.log(err));
-  }, [view, username]);
+  }, [username]);
 
   if (!profile) {
     return null;
   }
+
+  console.log(profile);
 
   return (
     <div className="container my-5">
@@ -45,11 +36,8 @@ const UserProfile = () => {
       </div>
 
       <div className="row justify-content-center">
-        <UserEventsCard events={events} view={view} setView={setView} />
-        <UserFriendsCard
-          username={profile.username}
-          friends={profile.friends}
-        />
+        <UserEventsCard username={username} />
+        <UserFriendsCard username={username} friends={profile.friends} />
       </div>
     </div>
   );
