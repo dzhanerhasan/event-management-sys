@@ -2,6 +2,7 @@ import "../styles/ParticipantModal.css";
 
 import React from "react";
 import { FaTimes } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const ParticipantModal = ({ showModal, toggleModal, participants }) => {
   if (!showModal) {
@@ -17,8 +18,15 @@ const ParticipantModal = ({ showModal, toggleModal, participants }) => {
         <h3>Participants</h3>
         <FaTimes className="participant-modal-close" onClick={toggleModal} />
         <ul>
-          {participants.map((participant, index) => (
-            <li key={index}>{participant.username}</li>
+          {participants.map((participant) => (
+            <li key={participant}>
+              <Link
+                to={`/user-profile/${participant.username}`}
+                style={{ textDecoration: "none" }}
+              >
+                {participant.username}
+              </Link>
+            </li>
           ))}
         </ul>
       </div>
