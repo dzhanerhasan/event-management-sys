@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Pusher from "pusher-js";
 import "../styles/Chat.css";
+import axios from "axios";
 
 const ChatIcon = ({ onClick }) => (
   <svg
@@ -48,22 +50,41 @@ const Chat = ({ username, friends }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [newChat, setNewChat] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [recentChats, setRecentChats] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState("");
 
-  const chats = ["Friend1", "Friend2", "Friend3"];
+  let allMessages = [];
 
-  const handleClickFriend = (friend) => {
+  useEffect(() => {
+    Pusher.logToConsole = true;
+
+    const pusher = new Pusher("0641b0bc3301d10c2a9e", {
+      cluster: "eu",
+    });
+
+    const channel = pusher.subscribe("ems-chat");
+
+    channel.bind("message", (data) => {
+      allMessages.push(data);
+      setMessages(allMessages);
+    });
+  }, []);
+
+  const handleChatSelect = (friend) => {
     setSelectedChat(friend);
+    setRecentChats((prevChats) => [friend, ...prevChats]);
   };
 
-  const renderChats = () => {
-    const list = newChat ? friends : chats;
-    return list
-      .filter((chat) => chat.includes(searchTerm))
-      .map((chat) => (
-        <div key={chat} onClick={() => handleClickFriend(chat)}>
-          {chat}
-        </div>
-      ));
+  const submit = async (e) => {
+    e.preventDefault();
+
+    await axios.post("http://localhost:8000/api/chat/messages", {
+      username,
+      message,
+    });
+
+    setMessage("");
   };
 
   return (
@@ -94,10 +115,30 @@ const Chat = ({ username, friends }) => {
           </div>
           {selectedChat ? (
             <div className="chat-window">
+              {messages?.map((msg, i) => (
+                <li key={i}>
+                  {msg.username}: {msg.message}
+                </li>
+              ))}
               <p>Chat with {selectedChat}</p>
+              <form onSubmit={submit}>
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Type a message..."
+                />
+                <button type="submit">Send</button>
+              </form>
             </div>
           ) : (
-            <div className="chat-list">{renderChats()}</div>
+            <div className="chat-list">
+              {(newChat ? friends : recentChats).map((friend) => (
+                <p key={friend} onClick={() => handleChatSelect(friend)}>
+                  {friend}
+                </p>
+              ))}
+            </div>
           )}
         </div>
       )}

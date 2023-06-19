@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "auth_api",
     "user_profile",
     "events_api",
+    "chat",
 ]
 
 MIDDLEWARE = [

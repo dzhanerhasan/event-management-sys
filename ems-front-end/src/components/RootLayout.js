@@ -9,13 +9,13 @@ import { fetchFriends } from "../redux/actions/userActions";
 
 const RootLayout = () => {
   const username = useSelector((state) => state?.user?.user.username);
-  const friends = useSelector((state) => state.user.friends);
+  const friends = useSelector((state) => state.user?.friends);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchFriends(username));
-  }, [dispatch]);
+  }, [username]);
 
   return (
     <>

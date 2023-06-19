@@ -22,4 +22,5 @@ urlpatterns = [
     path("api/auth/", include("auth_api.urls")),
     path("api/users/", include("user_profile.urls")),
     path("api/events/", include("events_api.urls")),
+    path("api/chat/", include("chat.urls")),
 ]
