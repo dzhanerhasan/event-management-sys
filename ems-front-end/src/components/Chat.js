@@ -54,8 +54,6 @@ const Chat = ({ username, friends }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
 
-  let allMessages = [];
-
   useEffect(() => {
     Pusher.logToConsole = true;
 
@@ -63,40 +61,91 @@ const Chat = ({ username, friends }) => {
       cluster: "eu",
     });
 
-    const channel = pusher.subscribe("ems-chat");
+    if (selectedChat) {
+      const chatID = [username, selectedChat].sort().join("-");
+      const channel = pusher.subscribe(chatID);
 
-    channel.bind("message", (data) => {
-      allMessages.push(data);
-      setMessages(allMessages);
-    });
-  }, []);
+      channel.bind("message", (data) => {
+        setMessages((prevMessages) => [...prevMessages, data]);
+      });
 
-  const handleChatSelect = (friend) => {
-    setSelectedChat(friend);
-    setRecentChats((prevChats) => [friend, ...prevChats]);
+      return () => {
+        pusher.unsubscribe(chatID);
+      };
+    }
+  }, [selectedChat, username]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/chat/recent", {
+        params: {
+          username: username,
+        },
+      })
+      .then((response) => {
+        setRecentChats(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [username]);
+
+  useEffect(() => {
+    if (selectedChat) {
+      const fetchMessages = async () => {
+        try {
+          const chatID = [username, selectedChat].sort().join("-");
+          const response = await axios.get(
+            `http://localhost:8000/api/chat/messages?chatId=${chatID}`
+          );
+          setMessages(response.data);
+        } catch (error) {
+          console.error("Failed to fetch messages:", error);
+        }
+      };
+
+      console.log(messages);
+      fetchMessages();
+    }
+  }, [selectedChat, username]);
+
+  const handleChatSelect = (chat) => {
+    setSelectedChat(chat);
   };
-
   const submit = async (e) => {
     e.preventDefault();
 
+    const chatID = [username, selectedChat].sort().join("-");
+
     await axios.post("http://localhost:8000/api/chat/messages", {
       username,
+      recipient: selectedChat,
       message,
+      chatID,
     });
 
+    setRecentChats((prevChats) => {
+      const newChat = { username: selectedChat, updated_at: new Date() };
+      return [
+        newChat,
+        ...prevChats.filter((chat) => chat.username !== selectedChat),
+      ];
+    });
+
+    setMessages([...messages, { sender: username, message }]);
     setMessage("");
   };
 
   return (
     <>
-      {!open && <ChatIcon onClick={() => setOpen(!open)} />}
+      {!open && <ChatIcon onClick={() => setOpen(true)} />}
       {open && (
         <div className={`chat-container`}>
           <div className="chat-header">
             {selectedChat ? (
               <>
                 <BackIcon onClick={() => setSelectedChat(null)} />
-                <CloseIcon onClick={() => setOpen(!open)} />
+                <CloseIcon onClick={() => setOpen(false)} />
               </>
             ) : (
               <>
@@ -109,33 +158,42 @@ const Chat = ({ username, friends }) => {
                 <button onClick={() => setNewChat(!newChat)}>
                   {newChat ? "View Chats" : "New Chat"}
                 </button>
-                <CloseIcon onClick={() => setOpen(!open)} />
+                <CloseIcon onClick={() => setOpen(false)} />
               </>
             )}
           </div>
           {selectedChat ? (
             <div className="chat-window">
               {messages?.map((msg, i) => (
-                <li key={i}>
-                  {msg.username}: {msg.message}
-                </li>
+                <span key={i}>
+                  <strong>{msg.sender}</strong>: {msg.message}
+                  <br></br>
+                </span>
               ))}
-              <p>Chat with {selectedChat}</p>
+              {!messages.length && <p>Start chatting with {selectedChat}</p>}
               <form onSubmit={submit}>
                 <input
                   type="text"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Type a message..."
+                  className="form-control"
                 />
-                <button type="submit">Send</button>
+                <button type="submit" className="btn btn-primary">
+                  Send
+                </button>
               </form>
             </div>
           ) : (
             <div className="chat-list">
-              {(newChat ? friends : recentChats).map((friend) => (
-                <p key={friend} onClick={() => handleChatSelect(friend)}>
-                  {friend}
+              {(newChat ? friends : recentChats)?.map((chat, index) => (
+                <p
+                  key={index}
+                  onClick={() =>
+                    handleChatSelect(newChat ? chat : chat.username)
+                  }
+                >
+                  {newChat ? chat : chat.username}
                 </p>
               ))}
             </div>
