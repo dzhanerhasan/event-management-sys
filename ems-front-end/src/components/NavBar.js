@@ -10,11 +10,21 @@ const NavBar = () => {
   return (
     <nav className="navbar" style={{ backgroundColor: "#1e293b" }}>
       <div className="container-md">
-        <a class="navbar-brand">
-          <Link to="/">
-            <img src={flowerLogo} alt="Daisy Pic" width="40vh" />
-          </Link>
-        </a>
+        <div className="d-flex align-items-center">
+          <a className="navbar-brand">
+            <Link to="/">
+              <img src={flowerLogo} alt="Daisy Pic" width="40vh" />
+            </Link>
+          </a>
+          <form className="d-flex ms-2 me-2">
+            <input
+              className="form-control"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            />
+          </form>
+        </div>
         <div style={{ display: "flex", alignItems: "center" }}>
           {location.pathname !== "/login" && <FriendRequests />}
           {location.pathname !== "/login" && <SideBar />}

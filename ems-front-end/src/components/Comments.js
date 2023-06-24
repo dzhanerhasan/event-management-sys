@@ -43,6 +43,7 @@ const Comments = ({
       <div className="card-footer">
         <div className="comment-form">
           <textarea
+            className="form-control"
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="Comment..."
