@@ -3,21 +3,11 @@ import Pusher from "pusher-js";
 import "../styles/Chat.css";
 import axios from "axios";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComments } from "@fortawesome/free-solid-svg-icons";
+
 const ChatIcon = ({ onClick }) => (
-  <svg
-    onClick={onClick}
-    className="chat-icon"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M4 22.07V4a2 2 0 012-2h16a2 2 0 012 2v12a2 2 0 01-2 2H7l-4 4z"></path>
-    <path d="M16 6h-8m8 4h-8m4 4H7"></path>
-  </svg>
+  <FontAwesomeIcon icon={faComments} onClick={onClick} className="chat-icon" />
 );
 
 const CloseIcon = ({ onClick }) => (

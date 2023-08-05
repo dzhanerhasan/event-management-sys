@@ -12,6 +12,8 @@ import CreateEvent from "./pages/CreateEvent";
 import UserProfile from "./pages/UserProfile";
 import EventDetails from "./pages/EventDetails";
 import Auth from "./pages/Auth";
+import Groups from "./pages/Groups";
+import Group from "./pages/Group";
 
 const isAuthenticated = () => !!localStorage.getItem("token");
 
@@ -89,6 +91,22 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <EventDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/groups",
+        element: (
+          <PrivateRoute>
+            <Groups />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/group/:groupId",
+        element: (
+          <PrivateRoute>
+            <Group />
           </PrivateRoute>
         ),
       },

@@ -1,8 +1,9 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import flowerLogo from "../images/flower-logo.png";
-import { Link } from "react-router-dom";
 import SideBar from "./SideBar";
 import FriendRequests from "./FriendRequests";
+import { faUsers } from "@fortawesome/free-solid-svg-icons";
 
 const NavBar = () => {
   const location = useLocation();
@@ -10,22 +11,22 @@ const NavBar = () => {
   return (
     <nav className="navbar" style={{ backgroundColor: "#1e293b" }}>
       <div className="container-md">
-        <div className="d-flex align-items-center">
-          <a className="navbar-brand">
-            <Link to="/">
-              <img src={flowerLogo} alt="Daisy Pic" width="40vh" />
-            </Link>
-          </a>
-          <form className="d-flex ms-2 me-2">
-            <input
-              className="form-control"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-          </form>
-        </div>
+        <a className="navbar-brand">
+          <Link to="/">
+            <img src={flowerLogo} alt="Daisy Pic" width="40vh" />
+          </Link>
+        </a>
         <div style={{ display: "flex", alignItems: "center" }}>
+          {location.pathname !== "/login" && (
+            <Link to="/groups">
+              <FontAwesomeIcon
+                icon={faUsers}
+                color="white"
+                size="2x"
+                style={{ marginRight: "20px" }}
+              />
+            </Link>
+          )}
           {location.pathname !== "/login" && <FriendRequests />}
           {location.pathname !== "/login" && <SideBar />}
         </div>

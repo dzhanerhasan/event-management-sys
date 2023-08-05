@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 const FriendRequests = () => {
@@ -47,7 +47,7 @@ const FriendRequests = () => {
         onClick={toggleShowRequests}
         style={{ cursor: "pointer", marginRight: "20px" }}
       >
-        <FontAwesomeIcon icon={faUsers} color="white" size="2x" />
+        <FontAwesomeIcon icon={faBell} color="white" size="2x" />
         {friendRequests.length > 0 && (
           <span className="badge bg-danger">{friendRequests.length}</span>
         )}
