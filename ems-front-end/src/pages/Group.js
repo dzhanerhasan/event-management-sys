@@ -1,61 +1,91 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FaUsers } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const Group = () => {
-  const grpId = useParams();
-  console.log(grpId);
-  const dummyGroups = [
-    {
-      id: "1",
-      title: "Group 1",
-      description: "This is Group 1",
-      members: ["User1", "User2"],
-      events: [
-        {
-          id: "e1",
-          title: "Event 1",
-          description: "This is Event 1",
-          date: "2023-06-25",
-          time: "10:00 AM",
-          location: "Location 1",
-          attendees: ["User1", "User2"],
-        },
-        {
-          id: "e2",
-          title: "Event 2",
-          description: "This is Event 2",
-          date: "2023-06-26",
-          time: "11:00 AM",
-          location: "Location 2",
-          attendees: ["User3", "User4"],
-        },
-        {
-          id: "e2",
-          title: "Event 2",
-          description: "This is Event 2",
-          date: "2023-06-26",
-          time: "11:00 AM",
-          location: "Location 2",
-          attendees: ["User3", "User4"],
-        },
-      ],
-    },
-    {
-      id: "2",
-      title: "Group 2",
-      description: "This is Group 2",
-      members: ["User3", "User4"],
-      events: [],
-    },
-  ];
-
-  const group = dummyGroups.find((getGrp) => getGrp.id === grpId.groupId);
-  console.log(group);
+  const { groupId } = useParams();
+  const [group, setGroup] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showMembersModal, setShowMembersModal] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedDescription, setEditedDescription] = useState("");
+
+  const handleEditModalOpen = () => setIsEditModalOpen(true);
+  const handleEditModalClose = () => setIsEditModalOpen(false);
+
+  const currentUser = useSelector((state) => state.user);
+  const isGroupCreator = group?.created_by === currentUser.id;
+
+  useEffect(() => {
+    const fetchGroupData = async () => {
+      try {
+        // Fetch the group data
+        let response = await fetch(
+          `http://localhost:8000/api/groups/${groupId}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch group data");
+        }
+        const groupData = await response.json();
+        setGroup(groupData);
+
+        response = await fetch("http://localhost:8000/api/events");
+        if (!response.ok) {
+          throw new Error("Failed to fetch events data");
+        }
+        const allEvents = await response.json();
+        const groupEvents = allEvents.filter(
+          (event) => event.group && event.group.id.toString() === groupId
+        );
+        console.log(groupEvents);
+        setEvents(groupEvents);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGroupData();
+  }, [groupId]);
+
+  const handleEditGroup = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/groups/${groupId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: editedTitle || group.title,
+            description: editedDescription || group.description,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const updatedGroup = await response.json();
+        setGroup(updatedGroup);
+        handleEditModalClose();
+      } else {
+        throw new Error("Failed to update group details");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleMembersModalClose = () => setShowMembersModal(false);
   const handleMembersModalOpen = () => setShowMembersModal(true);
+
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
 
   if (!group) {
     return <h2>Group not found</h2>;
@@ -74,12 +104,76 @@ const Group = () => {
       </h1>
       <p className="text-center">{group.description}</p>
       <div className="d-flex justify-content-center mb-3">
-        <button className="btn btn-primary mx-2">Edit Group</button>
-        <button className="btn btn-danger mx-2">Delete Group</button>
-        <button className="btn btn-warning mx-2">Assign Roles</button>
+        {isGroupCreator ? (
+          <>
+            <button
+              onClick={handleEditModalOpen}
+              className="btn btn-primary mx-2"
+            >
+              Edit Group
+            </button>
+            <button className="btn btn-danger mx-2">Delete Group</button>
+            <button className="btn btn-warning mx-2">Assign Roles</button>
+          </>
+        ) : (
+          <button className="btn btn-success mx-2">Join Group</button>
+        )}
       </div>
+
+      {isEditModalOpen && (
+        <div className="modal show d-block" tabIndex="-1">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Edit Group</h5>
+                <button
+                  onClick={handleEditModalClose}
+                  type="button"
+                  className="close"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label htmlFor="groupTitle">Group Title</label>
+                  <input
+                    id="groupTitle"
+                    type="text"
+                    value={editedTitle || group.title}
+                    onChange={(e) => setEditedTitle(e.target.value)}
+                    placeholder="Group Title"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="groupDescription">Group Description</label>
+                  <textarea
+                    id="groupDescription"
+                    value={editedDescription || group.description}
+                    onChange={(e) => setEditedDescription(e.target.value)}
+                    placeholder="Group Description"
+                    className="form-control"
+                  ></textarea>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleEditGroup}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{ maxHeight: "600px", overflow: "auto" }}>
-        {group.events.map((event, index) => (
+        {events.map((event) => (
           <Link
             to={`/event/${event.id}`}
             className="event-card-link"
@@ -135,7 +229,9 @@ const Group = () => {
             </div>
             <div className="modal-body">
               {group.members.map((member, index) => (
-                <p key={index}>{member}</p>
+                <p key={index}>
+                  {member.user} - {member.role}
+                </p>
               ))}
             </div>
             <div className="modal-footer">

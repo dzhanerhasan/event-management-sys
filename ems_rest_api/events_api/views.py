@@ -2,6 +2,8 @@ from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from event_groups.models import Group
 from .models import Comment, Event
 from .serializers import CommentSerializer, EventSerializer
 from django.contrib.auth.models import User
@@ -11,10 +13,17 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.filter(date__gte=timezone.now().date()).order_by(
         "date", "time"
     )
+
     serializer_class = EventSerializer
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
+        group_id = self.request.data.get("group")
+        if group_id:
+            group = Group.objects.get(pk=group_id)
+            serializer.save(created_by=self.request.user, group=group)
+        else:
+            serializer.save(created_by=self.request.user)
 
     @action(detail=True, methods=["post"])
     def participate(self, request, pk=None):

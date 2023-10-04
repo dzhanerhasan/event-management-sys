@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const Groups = () => {
   const [groupView, setGroupView] = useState("myGroups");
@@ -7,22 +9,50 @@ const Groups = () => {
   const [showModal, setShowModal] = useState(false);
   const [groupTitle, setGroupTitle] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
-  const [groups, setGroups] = useState([
-    { title: "Group 1", description: "This is Group 1", participants: 10 },
-    { title: "Group 2", description: "This is Group 2", participants: 20 },
-    { title: "Group 3", description: "This is Group 3", participants: 30 },
-  ]);
+  const [groups, setGroups] = useState([]);
+
+  const currentUser = useSelector((state) => state.user.user.username);
+  console.log(currentUser);
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/groups/");
+        setGroups(response.data);
+      } catch (error) {
+        console.error("Failed to fetch groups:", error);
+      }
+    };
+
+    fetchGroups();
+  }, []);
+
+  const displayedGroups =
+    groupView === "myGroups"
+      ? groups.filter((group) => group.members.includes(currentUser))
+      : groups.filter((group) => !group.members.includes(currentUser));
 
   const handleModalClose = () => setShowModal(false);
   const handleModalOpen = () => setShowModal(true);
-  const handleCreateGroup = () => {
-    setGroups([
-      ...groups,
-      { title: groupTitle, description: groupDescription, participants: 0 },
-    ]);
-    setGroupTitle("");
-    setGroupDescription("");
-    handleModalClose();
+
+  const handleCreateGroup = async () => {
+    try {
+      const newGroup = {
+        title: groupTitle,
+        description: groupDescription,
+        participants: 0,
+      };
+      const response = await axios.post(
+        "http://localhost:8000/api/groups/",
+        newGroup
+      );
+      setGroups([...groups, response.data]);
+      setGroupTitle("");
+      setGroupDescription("");
+      handleModalClose();
+    } catch (error) {
+      console.error("Failed to create group:", error);
+    }
   };
 
   return (
@@ -67,22 +97,35 @@ const Groups = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      {groups.map((group, index) => (
-        <div
-          key={index}
-          className="d-flex justify-content-between align-items-center bg-light p-3 mb-3 rounded"
-        >
-          <div>
-            <Link to={`/group/${index}`} style={{ textDecoration: "none" }}>
-              <h4 className="mb-1">{group.title}</h4>
-            </Link>
-            <p className="mb-0">{group.description}</p>
+
+      {groups
+        .filter((group) => {
+          if (groupView === "myGroups") {
+            return group.members.some((member) => member.user === currentUser);
+          } else if (groupView === "findGroup") {
+            return !group.members.some((member) => member.user === currentUser);
+          }
+          return true;
+        })
+        .map((group) => (
+          <div
+            key={group.id}
+            className="d-flex justify-content-between align-items-center bg-light p-3 mb-3 rounded"
+          >
+            <div>
+              <Link
+                to={`/group/${group.id}`}
+                style={{ textDecoration: "none" }}
+              >
+                <h4 className="mb-1">{group.title}</h4>
+              </Link>
+              <p className="mb-0">{group.description}</p>
+            </div>
+            <div>
+              <span>{group.members.length || 0} members</span>
+            </div>
           </div>
-          <div>
-            <span>{group.participants} participants</span>
-          </div>
-        </div>
-      ))}
+        ))}
 
       <div className={`modal ${showModal ? "d-block" : ""}`}>
         <div className="modal-dialog modal-dialog-centered">

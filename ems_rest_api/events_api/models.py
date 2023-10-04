@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from event_groups.models import Group
+
 
 class Event(models.Model):
     title = models.CharField(max_length=100)
@@ -13,6 +15,13 @@ class Event(models.Model):
         User, related_name="created_events", on_delete=models.CASCADE
     )
     attendees = models.ManyToManyField(User, related_name="attended_events", blank=True)
+    group = models.ForeignKey(
+        Group,
+        related_name="group_events",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
 
 
 class Comment(models.Model):

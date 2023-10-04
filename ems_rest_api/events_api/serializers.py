@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from event_groups.serializers import GroupSerializer
 from .models import Comment, Event
 from django.contrib.auth.models import User
 
@@ -21,6 +23,7 @@ class EventSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     attendees = UserSerializer(many=True, read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
+    group = GroupSerializer(read_only=True)
 
     class Meta:
         model = Event
@@ -35,4 +38,5 @@ class EventSerializer(serializers.ModelSerializer):
             "created_by",
             "attendees",
             "comments",
+            "group",
         ]
